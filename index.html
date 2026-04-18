@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人网站</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="cursor"></div>
+    <div id="cursor-outline"></div>
+    <div id="page-transition">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+            <h1 style="font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px;">Philx</h1>
+            <p style="font-size: 1rem; color: #b3b3b3; margin-bottom: 32px;">用代码创造美好数字体验</p>
+            <div style="width: 40px; height: 40px; border: 3px solid rgba(102, 126, 234, 0.3); border-top-color: #667eea; border-radius: 50%; animation: spin 1s ease-in-out infinite; margin: 0 auto;"></div>
+        </div>
+    </div>
+    <div id="scroll-progress"></div>
+    <div id="particles-container"></div>
+    
+    <nav class="navbar" aria-label="主导航">
+        <div class="container nav-container">
+            <a href="#" class="logo" aria-label="首页">
+                <span class="logo-text">Philx</span>
+            </a>
+            <ul class="nav-links" role="menubar" aria-label="导航菜单">
+                <li role="none"><a href="#home" class="nav-link" role="menuitem" aria-label="首页">首页</a></li>
+                <li role="none"><a href="#projects" class="nav-link" role="menuitem" aria-label="项目">项目</a></li>
+                <li role="none"><a href="#about" class="nav-link" role="menuitem" aria-label="关于">关于</a></li>
+                <li role="none"><a href="#contact" class="nav-link" role="menuitem" aria-label="联系">联系</a></li>
+            </ul>
+            <button class="menu-toggle" aria-label="菜单" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-bg-gradient"></div>
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="main-title">实</span>
+                        <span class="main-title">事</span>
+                        <span class="main-title">求</span>
+                        <span class="main-title">是</span>
+                    </h1>
+                    <h2 class="gradient-text">调查,实践,反馈,进步</h2>
+                    <p class="hero-description">
+                        相信创新的力量，用AI将想象变为现实，争取在对世界的实事求是中改变世界。
+                    </p>
+                </div>
+                <div class="hero-projects" aria-label="项目预览">
+                    <div class="hero-project-card" role="group" aria-label="项目1: 数据分析平台" data-project-id="1">
+                        <img data-src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20SaaS%20dashboard%20interface%20dark%20theme%20with%20neon%20accents&image_size=landscape_16_9" alt="数据分析平台" class="lazy">
+                        <div class="hero-project-info">
+                            <span class="project-category">Web应用</span>
+                            <h3>数据分析平台</h3>
+                        </div>
+                    </div>
+                    <div class="hero-project-card" role="group" aria-label="项目2: 健康管理App" data-project-id="2">
+                        <img data-src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=mobile%20app%20interface%20with%20gradient%20design%20ios%20style&image_size=landscape_4_3" alt="健康管理App" class="lazy">
+                        <div class="hero-project-info">
+                            <span class="project-category">移动应用</span>
+                            <h3>健康管理App</h3>
+                        </div>
+                    </div>
+                    <div class="hero-project-card" role="group" aria-label="项目3: 时尚电商平台" data-project-id="3">
+                        <img data-src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=e-commerce%20website%20design%20minimalist%20fashion%20store&image_size=landscape_4_3" alt="时尚电商平台" class="lazy">
+                        <div class="hero-project-info">
+                            <span class="project-category">电商网站</span>
+                            <h3>时尚电商平台</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="projects" aria-label="项目作品">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">项目作品</span>
+                    <h2 class="section-title">精选项目</h2>
+                </div>
+                <div class="projects-scroll">
+                    <div class="projects-container">
+                        <article class="project-card" role="group" aria-label="项目1: 数据分析平台" data-project-id="1">
+                            <div class="project-image">
+                                <img data-src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20SaaS%20dashboard%20interface%20dark%20theme%20with%20neon%20accents&image_size=landscape_16_9" alt="数据分析平台" class="lazy">
+                            </div>
+                            <div class="project-content">
+                                <span class="project-category">Web应用</span>
+                                <h3>数据分析平台</h3>
+                                <p>现代化数据分析平台，实时处理和可视化大规模数据</p>
+                                <div class="project-tags">
+                                    <span>React</span>
+                                    <span>D3.js</span>
+                                    <span>Node.js</span>
+                                </div>
+                                <a href="#" class="project-link" aria-label="查看数据分析平台详情">
+                                    <span>查看详情</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </article>
+                        <article class="project-card" role="group" aria-label="项目2: 健康管理App" data-project-id="2">
+                            <div class="project-image">
+                                <img data-src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=mobile%20app%20interface%20with%20gradient%20design%20ios%20style&image_size=landscape_4_3" alt="健康管理App" class="lazy">
+                            </div>
+                            <div class="project-content">
+                                <span class="project-category">移动应用</span>
+                                <h3>健康管理App</h3>
+                                <p>简洁高效的健康数据追踪应用</p>
+                                <div class="project-tags">
+                                    <span>React Native</span>
+                                    <span>Firebase</span>
+                                    <span>Redux</span>
+                                </div>
+                                <a href="#" class="project-link" aria-label="查看健康管理App详情">
+                                    <span>查看详情</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </article>
+                        <article class="project-card" role="group" aria-label="项目3: 时尚电商平台" data-project-id="3">
+                            <div class="project-image">
+                                <img data-src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=e-commerce%20website%20design%20minimalist%20fashion%20store&image_size=landscape_4_3" alt="时尚电商平台" class="lazy">
+                            </div>
+                            <div class="project-content">
+                                <span class="project-category">电商网站</span>
+                                <h3>时尚电商平台</h3>
+                                <p>高端时尚品牌的在线购物体验</p>
+                                <div class="project-tags">
+                                    <span>Next.js</span>
+                                    <span>Stripe</span>
+                                    <span>GraphQL</span>
+                                </div>
+                                <a href="#" class="project-link" aria-label="查看时尚电商平台详情">
+                                    <span>查看详情</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </article>
+                        <article class="project-card" role="group" aria-label="项目4: 智能客服系统" data-project-id="4">
+                            <div class="project-image">
+                                <img data-src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20chatbot%20interface%20modern%20dark%20design%20futuristic&image_size=landscape_4_3" alt="智能客服系统" class="lazy">
+                            </div>
+                            <div class="project-content">
+                                <span class="project-category">AI应用</span>
+                                <h3>智能客服系统</h3>
+                                <p>基于大语言模型的智能对话系统</p>
+                                <div class="project-tags">
+                                    <span>Python</span>
+                                    <span>OpenAI</span>
+                                    <span>FastAPI</span>
+                                </div>
+                                <a href="#" class="project-link" aria-label="查看智能客服系统详情">
+                                    <span>查看详情</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </article>
+                        <article class="project-card" role="group" aria-label="项目5: 个人作品集网站" data-project-id="5">
+                            <div class="project-image">
+                                <img data-src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20portfolio%20website%20design%20dark%20theme&image_size=landscape_4_3" alt="个人作品集网站" class="lazy">
+                            </div>
+                            <div class="project-content">
+                                <span class="project-category">作品集</span>
+                                <h3>个人作品集网站</h3>
+                                <p>现代化个人作品集网站，展示项目和技能</p>
+                                <div class="project-tags">
+                                    <span>HTML</span>
+                                    <span>CSS</span>
+                                    <span>JavaScript</span>
+                                </div>
+                                <a href="#" class="project-link" aria-label="查看个人作品集网站详情">
+                                    <span>查看详情</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about" aria-label="关于我">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">关于我</span>
+                    <h2 class="section-title">用技术创造美好</h2>
+                </div>
+                <div class="about-grid">
+                    <div class="about-card about-image" role="group" aria-label="个人照片">
+                        <div class="image-wrapper">
+                            <img data-src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=portrait%20photo%20of%20a%20creative%20developer%20working%20in%20modern%20dark%20office&image_size=portrait_4_3" alt="个人照片" class="lazy">
+                            <div class="image-overlay"></div>
+                        </div>
+                    </div>
+                    <div class="about-card about-content">
+                        <h3>全栈开发者 & 设计师</h3>
+                        <p>我是一名热爱编程和设计的开发者。我相信好的代码就是艺术，而好的设计能让技术更有温度。</p>
+                        <p>从初创公司到大型企业，我参与过各种规模的项目，积累了丰富的开发经验。专注于前端工程、性能优化和用户体验设计。</p>
+                        <div class="about-tags">
+                            <span class="tag">React</span>
+                            <span class="tag">Node.js</span>
+                            <span class="tag">TypeScript</span>
+                            <span class="tag">Python</span>
+                            <span class="tag">UI/UX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact" aria-label="联系我">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">联系我</span>
+                    <h2 class="section-title">开始合作</h2>
+                </div>
+                <div class="contact-grid">
+                    <div class="contact-info" role="complementary" aria-label="联系信息">
+                        <p class="contact-intro">有任何项目想法或合作机会？随时与我联系，我很乐意与你探讨。</p>
+                        <div class="contact-methods" role="list" aria-label="联系方式">
+                            <div class="contact-method" role="listitem" aria-label="邮箱">
+                                <div class="method-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="method-content">
+                                    <span class="method-label">邮箱</span>
+                                    <a href="mailto:philxxxx@163.com" class="method-value" aria-label="发送邮件">philxxxx@163.com</a>
+                                </div>
+                            </div>
+                            <div class="contact-method" role="listitem" aria-label="电话">
+                                <div class="method-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="method-content">
+                                    <span class="method-label">电话</span>
+                                    <span class="method-value">+86 183 1009 8327</span>
+                                </div>
+                            </div>
+                            <div class="contact-method" role="listitem" aria-label="位置">
+                                <div class="method-icon">
+                                    <i class="fas fa-location-dot"></i>
+                                </div>
+                                <div class="method-content">
+                                    <span class="method-label">位置</span>
+                                    <span class="method-value">中国，北京</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="social-links" role="group" aria-label="社交媒体链接">
+                            <a href="#" class="social-link" aria-label="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Dribbble">
+                                <i class="fab fa-dribbble"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <form class="contact-form" aria-label="联系表单">
+                        <div class="form-group">
+                            <input type="text" id="name" required aria-required="true" aria-label="姓名">
+                            <label for="name">姓名</label>
+                            <span class="focus-border"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" required aria-required="true" aria-label="邮箱">
+                            <label for="email">邮箱</label>
+                            <span class="focus-border"></span>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" rows="5" required aria-required="true" aria-label="留言"></textarea>
+                            <label for="message">留言</label>
+                            <span class="focus-border"></span>
+                        </div>
+                        <button type="submit" class="btn btn-submit" aria-label="发送消息">
+                            <span>发送消息</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="project-modal" class="project-modal" aria-hidden="true">
+        <div class="modal-content">
+            <button id="close-modal" class="modal-close" aria-label="关闭模态框">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modal-project-content" class="modal-project-content">
+                <!-- 项目详情内容将通过JavaScript动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="footer-logo">Philx</span>
+                    <p>用代码创造美好数字体验</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#home">首页</a>
+                    <a href="#about">关于</a>
+                    <a href="#projects">项目</a>
+                    <a href="#contact">联系</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Philx. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
