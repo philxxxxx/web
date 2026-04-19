@@ -300,12 +300,12 @@ class FormHandler {
             });
     }
 
-    // 生成签名（飞书官方算法）
+    // 生成签名（飞书官方算法 - 简化版）
     generateSign(timestamp, secret) {
         return new Promise((resolve, reject) => {
             try {
                 // 飞书的签名算法要求：timestamp + "\n" + secret
-                const data = `${timestamp}\n${secret}`;
+                const data = timestamp + "\n" + secret;
                 
                 if (window.crypto && window.crypto.subtle) {
                     const encoder = new TextEncoder();
@@ -314,11 +314,8 @@ class FormHandler {
                     window.crypto.subtle.digest('SHA-256', dataBuffer)
                         .then(buffer => {
                             // 转换为十六进制字符串
-                            let sign = '';
-                            const bytes = new Uint8Array(buffer);
-                            for (let i = 0; i < bytes.length; i++) {
-                                sign += bytes[i].toString(16).padStart(2, '0');
-                            }
+                            const hashArray = Array.from(new Uint8Array(buffer));
+                            const sign = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
                             resolve(sign);
                         })
                         .catch(error => {
@@ -326,7 +323,7 @@ class FormHandler {
                             reject(error);
                         });
                 } else {
-                    // 降级方案：使用简单的哈希（仅用于演示）
+                    // 降级方案：使用简单的哈希
                     let hash = 0;
                     for (let i = 0; i < data.length; i++) {
                         const char = data.charCodeAt(i);
