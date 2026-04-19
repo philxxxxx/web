@@ -280,14 +280,14 @@ class FormHandler {
             .then(response => {
                 console.log('飞书响应状态:', response.status);
                 console.log('飞书响应:', response);
-                return response.text();
+                return response.json(); // 关键：解析 JSON
             })
             .then(data => {
-                console.log('飞书响应数据:', data);
+                console.log('飞书返回:', data);
                 alert(`感谢您的留言，${name}！我会尽快回复您。`);
             })
             .catch(error => {
-                console.error('发送失败:', error);
+                console.error('请求失败:', error);
                 alert(`感谢您的留言，${name}！我会尽快回复您。`);
             })
             .finally(() => {
