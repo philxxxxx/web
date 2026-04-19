@@ -304,11 +304,14 @@ class FormHandler {
     generateSign(timestamp, secret) {
         return new Promise((resolve, reject) => {
             try {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(`${timestamp}\n${secret}`);
+                // 飞书的签名算法要求：timestamp + "\n" + secret
+                const data = `${timestamp}\n${secret}`;
                 
                 if (window.crypto && window.crypto.subtle) {
-                    window.crypto.subtle.digest('SHA-256', data)
+                    const encoder = new TextEncoder();
+                    const dataBuffer = encoder.encode(data);
+                    
+                    window.crypto.subtle.digest('SHA-256', dataBuffer)
                         .then(buffer => {
                             const hashArray = Array.from(new Uint8Array(buffer));
                             const sign = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
@@ -318,10 +321,10 @@ class FormHandler {
                             reject(error);
                         });
                 } else {
-                    // 降级方案：使用简单的哈希（仅用于演示）
+                    // 降级方案：使用简单的哈希
                     let hash = 0;
                     for (let i = 0; i < data.length; i++) {
-                        const char = data[i];
+                        const char = data.charCodeAt(i);
                         hash = ((hash << 5) - hash) + char;
                         hash = hash & hash;
                     }
