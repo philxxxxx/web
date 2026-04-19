@@ -160,23 +160,46 @@ class ProjectCards {
 
     init() {
         this.cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 20;
-                const rotateY = (centerX - x) / 20;
-
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-            });
+            // 移除鼠标悬停动效
         });
     }
+}
+
+// 项目滚动功能
+function initProjectScroll() {
+    const scrollContainer = document.querySelector('.projects-scroll');
+    const scrollLeftBtn = document.querySelector('.scroll-left');
+    const scrollRightBtn = document.querySelector('.scroll-right');
+    
+    if (scrollLeftBtn && scrollRightBtn && scrollContainer) {
+        // 计算滚动距离：卡片宽度(300px) + 间距(24px)
+        const cardWidth = 300;
+        const gap = 24;
+        const scrollDistance = cardWidth + gap;
+        
+        scrollLeftBtn.onclick = function() {
+            // 使用平滑滚动
+            scrollContainer.scrollBy({
+                left: -scrollDistance,
+                behavior: 'smooth'
+            });
+        };
+        
+        scrollRightBtn.onclick = function() {
+            // 使用平滑滚动
+            scrollContainer.scrollBy({
+                left: scrollDistance,
+                behavior: 'smooth'
+            });
+        };
+    }
+}
+
+// 确保在页面加载完成后初始化
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProjectScroll);
+} else {
+    initProjectScroll();
 }
 
 class FormHandler {
@@ -217,10 +240,12 @@ class FormHandler {
         const email = this.form.querySelector('#email').value;
         const message = this.form.querySelector('#message').value;
 
-        // 飞书机器人Webhook地址（请替换为你自己的）
+        // 飞书机器人Webhook地址
         const webhookUrl = 'https://open.feishu.cn/open-apis/bot/v2/hook/ed631cbf-5ed3-413a-a533-6c83ce22fb8a';
+        // 加签密钥（从飞书机器人设置中复制）
+        const secret = 'UhOPlMyeOvx8dfJmCiGozf'; // 请替换为实际的密钥
 
-        // 构建飞书消息格式 - 使用更简单的文本格式
+        // 构建飞书消息格式
         const feishuMessage = {
             msg_type: 'text',
             content: {
@@ -228,40 +253,83 @@ class FormHandler {
             }
         };
 
-        // 发送到飞书
-        console.log('开始发送消息到飞书...');
-        console.log('Webhook URL:', webhookUrl);
-        console.log('消息内容:', feishuMessage);
+        // 生成时间戳和签名
+        const timestamp = Date.now();
         
-        fetch(webhookUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(feishuMessage)
-        })
-        .then(response => {
-            console.log('飞书响应状态:', response.status);
-            console.log('飞书响应:', response);
-            return response.text();
-        })
-        .then(data => {
-            console.log('飞书响应数据:', data);
-            alert(`感谢您的留言，${name}！我会尽快回复您。`);
-        })
-        .catch(error => {
-            console.error('发送失败:', error);
-            alert(`感谢您的留言，${name}！我会尽快回复您。`);
-        })
-        .finally(() => {
-            this.form.reset();
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
+        // 生成签名
+        this.generateSign(timestamp, secret)
+            .then(sign => {
+                // 构建完整的请求URL
+                const requestUrl = `${webhookUrl}?timestamp=${timestamp}&sign=${sign}`;
+                
+                console.log('开始发送消息到飞书...');
+                console.log('请求URL:', requestUrl);
+                console.log('消息内容:', feishuMessage);
+                
+                // 发送到飞书
+                return fetch(requestUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(feishuMessage)
+                });
+            })
+            .then(response => {
+                console.log('飞书响应状态:', response.status);
+                console.log('飞书响应:', response);
+                return response.text();
+            })
+            .then(data => {
+                console.log('飞书响应数据:', data);
+                alert(`感谢您的留言，${name}！我会尽快回复您。`);
+            })
+            .catch(error => {
+                console.error('发送失败:', error);
+                alert(`感谢您的留言，${name}！我会尽快回复您。`);
+            })
+            .finally(() => {
+                this.form.reset();
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
 
-            const inputs = this.form.querySelectorAll('input, textarea');
-            inputs.forEach(input => {
-                input.parentElement.classList.remove('focused');
+                const inputs = this.form.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    input.parentElement.classList.remove('focused');
+                });
             });
+    }
+
+    // 生成签名
+    generateSign(timestamp, secret) {
+        return new Promise((resolve, reject) => {
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(`${timestamp}\n${secret}`);
+                
+                if (window.crypto && window.crypto.subtle) {
+                    window.crypto.subtle.digest('SHA-256', data)
+                        .then(buffer => {
+                            const hashArray = Array.from(new Uint8Array(buffer));
+                            const sign = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                            resolve(sign);
+                        })
+                        .catch(error => {
+                            reject(error);
+                        });
+                } else {
+                    // 降级方案：使用简单的哈希（仅用于演示）
+                    let hash = 0;
+                    for (let i = 0; i < data.length; i++) {
+                        const char = data[i];
+                        hash = ((hash << 5) - hash) + char;
+                        hash = hash & hash;
+                    }
+                    resolve(Math.abs(hash).toString(16));
+                }
+            } catch (error) {
+                reject(error);
+            }
         });
     }
 }
@@ -355,7 +423,7 @@ class MagneticEffect {
     }
 
     init() {
-        const magneticElements = document.querySelectorAll('.social-link, .btn');
+        const magneticElements = document.querySelectorAll('.btn');
         
         magneticElements.forEach(el => {
             el.addEventListener('mousemove', (e) => {
