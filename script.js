@@ -255,6 +255,8 @@ class FormHandler {
 
         // 生成时间戳和签名
         const timestamp = Math.floor(Date.now() / 1000); // 使用秒级时间戳
+        console.log('生成的时间戳:', timestamp);
+        console.log('当前时间:', new Date());
         
         // 生成签名
         this.generateSign(timestamp, secret)
@@ -300,14 +302,17 @@ class FormHandler {
             });
     }
 
-    // 生成签名（飞书官方算法 - 简化版）
+    // 生成签名（飞书官方算法 - 详细日志版）
     generateSign(timestamp, secret) {
         return new Promise((resolve, reject) => {
             try {
                 // 飞书的签名算法要求：timestamp + "\n" + secret
                 const data = timestamp + "\n" + secret;
+                console.log('签名数据:', data);
+                console.log('密钥:', secret);
                 
                 if (window.crypto && window.crypto.subtle) {
+                    console.log('使用Web Crypto API生成签名');
                     const encoder = new TextEncoder();
                     const dataBuffer = encoder.encode(data);
                     
@@ -316,6 +321,8 @@ class FormHandler {
                             // 转换为十六进制字符串
                             const hashArray = Array.from(new Uint8Array(buffer));
                             const sign = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                            console.log('生成的签名:', sign);
+                            console.log('签名长度:', sign.length);
                             resolve(sign);
                         })
                         .catch(error => {
@@ -323,6 +330,7 @@ class FormHandler {
                             reject(error);
                         });
                 } else {
+                    console.log('使用降级方案生成签名');
                     // 降级方案：使用简单的哈希
                     let hash = 0;
                     for (let i = 0; i < data.length; i++) {
@@ -330,7 +338,9 @@ class FormHandler {
                         hash = ((hash << 5) - hash) + char;
                         hash = hash & hash;
                     }
-                    resolve(Math.abs(hash).toString(16));
+                    const sign = Math.abs(hash).toString(16);
+                    console.log('降级生成的签名:', sign);
+                    resolve(sign);
                 }
             } catch (error) {
                 console.error('签名生成异常:', error);
