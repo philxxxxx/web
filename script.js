@@ -254,7 +254,7 @@ class FormHandler {
         };
 
         // 生成时间戳和签名
-        const timestamp = Date.now();
+        const timestamp = Math.floor(Date.now() / 1000); // 使用秒级时间戳
         
         // 生成签名
         this.generateSign(timestamp, secret)
