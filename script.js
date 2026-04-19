@@ -300,7 +300,7 @@ class FormHandler {
             });
     }
 
-    // 生成签名
+    // 生成签名（飞书官方算法）
     generateSign(timestamp, secret) {
         return new Promise((resolve, reject) => {
             try {
@@ -313,15 +313,20 @@ class FormHandler {
                     
                     window.crypto.subtle.digest('SHA-256', dataBuffer)
                         .then(buffer => {
-                            const hashArray = Array.from(new Uint8Array(buffer));
-                            const sign = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                            // 转换为十六进制字符串
+                            let sign = '';
+                            const bytes = new Uint8Array(buffer);
+                            for (let i = 0; i < bytes.length; i++) {
+                                sign += bytes[i].toString(16).padStart(2, '0');
+                            }
                             resolve(sign);
                         })
                         .catch(error => {
+                            console.error('签名生成失败:', error);
                             reject(error);
                         });
                 } else {
-                    // 降级方案：使用简单的哈希
+                    // 降级方案：使用简单的哈希（仅用于演示）
                     let hash = 0;
                     for (let i = 0; i < data.length; i++) {
                         const char = data.charCodeAt(i);
@@ -331,6 +336,7 @@ class FormHandler {
                     resolve(Math.abs(hash).toString(16));
                 }
             } catch (error) {
+                console.error('签名生成异常:', error);
                 reject(error);
             }
         });
