@@ -242,8 +242,6 @@ class FormHandler {
 
         // 飞书机器人Webhook地址
         const webhookUrl = 'https://open.feishu.cn/open-apis/bot/v2/hook/ed631cbf-5ed3-413a-a533-6c83ce22fb8a';
-        // 加签密钥（从飞书机器人设置中复制）
-        const secret = 'UhOPlMyeOvx8dfJmCiGozf'; // 请替换为实际的密钥
 
         // 构建飞书消息格式
         const feishuMessage = {
@@ -253,103 +251,40 @@ class FormHandler {
             }
         };
 
-        // 生成时间戳和签名
-        const timestamp = Math.floor(Date.now() / 1000); // 使用秒级时间戳
-        console.log('生成的时间戳:', timestamp);
-        console.log('当前时间:', new Date());
-        
-        // 生成签名
-        this.generateSign(timestamp, secret)
-            .then(sign => {
-                // 构建完整的请求URL
-                const requestUrl = `${webhookUrl}?timestamp=${timestamp}&sign=${sign}`;
-                
-                console.log('开始发送消息到飞书...');
-                console.log('请求URL:', requestUrl);
-                console.log('消息内容:', feishuMessage);
-                
-                // 发送到飞书
-                return fetch(requestUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(feishuMessage)
-                });
-            })
-            .then(response => {
-                console.log('飞书响应状态:', response.status);
-                console.log('飞书响应:', response);
-                return response.json(); // 关键：解析 JSON
-            })
-            .then(data => {
-                console.log('飞书返回:', data);
-                alert(`感谢您的留言，${name}！我会尽快回复您。`);
-            })
-            .catch(error => {
-                console.error('请求失败:', error);
-                alert(`感谢您的留言，${name}！我会尽快回复您。`);
-            })
-            .finally(() => {
-                this.form.reset();
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+        console.log('开始发送消息到飞书...');
+        console.log('请求URL:', webhookUrl);
+        console.log('消息内容:', feishuMessage);
 
-                const inputs = this.form.querySelectorAll('input, textarea');
-                inputs.forEach(input => {
-                    input.parentElement.classList.remove('focused');
-                });
+        // 发送到飞书
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(feishuMessage)
+        })
+        .then(response => {
+            console.log('飞书响应状态:', response.status);
+            console.log('飞书响应:', response);
+            return response.json();
+        })
+        .then(data => {
+            console.log('飞书返回:', data);
+            alert(`感谢您的留言，${name}！我会尽快回复您。`);
+        })
+        .catch(error => {
+            console.error('请求失败:', error);
+            alert(`感谢您的留言，${name}！我会尽快回复您。`);
+        })
+        .finally(() => {
+            this.form.reset();
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+
+            const inputs = this.form.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.parentElement.classList.remove('focused');
             });
-    }
-
-    // 生成签名（飞书官方算法 - 最终版）
-    generateSign(timestamp, secret) {
-        return new Promise((resolve, reject) => {
-            try {
-                // 确保时间戳是字符串类型
-                const timestampStr = String(timestamp);
-                // 飞书的签名算法要求：timestamp + "\n" + secret
-                const data = timestampStr + "\n" + secret;
-                console.log('签名数据:', data);
-                
-                if (window.crypto && window.crypto.subtle) {
-                    console.log('使用Web Crypto API生成签名');
-                    const encoder = new TextEncoder();
-                    const dataBuffer = encoder.encode(data);
-                    
-                    window.crypto.subtle.digest('SHA-256', dataBuffer)
-                        .then(buffer => {
-                            // 转换为十六进制字符串
-                            let sign = '';
-                            const bytes = new Uint8Array(buffer);
-                            for (let i = 0; i < bytes.length; i++) {
-                                sign += bytes[i].toString(16).padStart(2, '0');
-                            }
-                            console.log('生成的签名:', sign);
-                            console.log('签名长度:', sign.length);
-                            resolve(sign);
-                        })
-                        .catch(error => {
-                            console.error('签名生成失败:', error);
-                            reject(error);
-                        });
-                } else {
-                    console.log('使用降级方案生成签名');
-                    // 降级方案：使用简单的哈希
-                    let hash = 0;
-                    for (let i = 0; i < data.length; i++) {
-                        const char = data.charCodeAt(i);
-                        hash = ((hash << 5) - hash) + char;
-                        hash = hash & hash;
-                    }
-                    const sign = Math.abs(hash).toString(16);
-                    console.log('降级生成的签名:', sign);
-                    resolve(sign);
-                }
-            } catch (error) {
-                console.error('签名生成异常:', error);
-                reject(error);
-            }
         });
     }
 }
