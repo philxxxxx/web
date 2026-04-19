@@ -302,14 +302,15 @@ class FormHandler {
             });
     }
 
-    // 生成签名（飞书官方算法 - 详细日志版）
+    // 生成签名（飞书官方算法 - 最终版）
     generateSign(timestamp, secret) {
         return new Promise((resolve, reject) => {
             try {
+                // 确保时间戳是字符串类型
+                const timestampStr = String(timestamp);
                 // 飞书的签名算法要求：timestamp + "\n" + secret
-                const data = timestamp + "\n" + secret;
+                const data = timestampStr + "\n" + secret;
                 console.log('签名数据:', data);
-                console.log('密钥:', secret);
                 
                 if (window.crypto && window.crypto.subtle) {
                     console.log('使用Web Crypto API生成签名');
@@ -319,8 +320,11 @@ class FormHandler {
                     window.crypto.subtle.digest('SHA-256', dataBuffer)
                         .then(buffer => {
                             // 转换为十六进制字符串
-                            const hashArray = Array.from(new Uint8Array(buffer));
-                            const sign = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                            let sign = '';
+                            const bytes = new Uint8Array(buffer);
+                            for (let i = 0; i < bytes.length; i++) {
+                                sign += bytes[i].toString(16).padStart(2, '0');
+                            }
                             console.log('生成的签名:', sign);
                             console.log('签名长度:', sign.length);
                             resolve(sign);
