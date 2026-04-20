@@ -48,6 +48,7 @@ class Navbar {
         this.navbar = document.querySelector('.navbar');
         this.menuToggle = document.querySelector('.menu-toggle');
         this.navLinks = document.querySelector('.nav-links');
+        this.isMenuOpen = false;
         this.init();
     }
 
@@ -61,16 +62,41 @@ class Navbar {
         });
 
         this.menuToggle.addEventListener('click', () => {
-            this.menuToggle.classList.toggle('active');
-            this.navLinks.classList.toggle('active');
+            this.toggleMenu();
+        });
+
+        this.menuToggle.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.toggleMenu();
         });
 
         this.navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                this.menuToggle.classList.remove('active');
-                this.navLinks.classList.remove('active');
+                this.closeMenu();
             });
         });
+
+        document.addEventListener('click', (e) => {
+            if (this.isMenuOpen && 
+                !this.navLinks.contains(e.target) && 
+                !this.menuToggle.contains(e.target)) {
+                this.closeMenu();
+            }
+        });
+    }
+
+    toggleMenu() {
+        this.isMenuOpen = !this.isMenuOpen;
+        this.menuToggle.classList.toggle('active', this.isMenuOpen);
+        this.navLinks.classList.toggle('active', this.isMenuOpen);
+        document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
+    }
+
+    closeMenu() {
+        this.isMenuOpen = false;
+        this.menuToggle.classList.remove('active');
+        this.navLinks.classList.remove('active');
+        document.body.style.overflow = '';
     }
 }
 
@@ -560,6 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new MagneticEffect();
     new Particles();
     new ImageLazyLoad();
+    new ProjectModal();
 
     const style = document.createElement('style');
     style.textContent = `
@@ -597,6 +624,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     `;
     document.head.appendChild(style);
+    
+    // 飞书二维码点击切换
+    const feishuLink = document.getElementById('feishu-link');
+    
+    if (feishuLink) {
+        feishuLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.classList.toggle('show-qrcode');
+        });
+    }
 });
 
 // 项目详情模态框功能
@@ -794,16 +831,3 @@ class ProjectModal {
         }
     }
 }
-
-// 添加到DOMContentLoaded
-const originalDOMContentLoaded = document.addEventListener;
-document.addEventListener = function(event, listener) {
-    if (event === 'DOMContentLoaded') {
-        const originalListener = listener;
-        listener = function() {
-            originalListener();
-            new ProjectModal();
-        };
-    }
-    return originalDOMContentLoaded.call(this, event, listener);
-};
