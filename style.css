@@ -716,7 +716,9 @@ body {
 }
 
 .project-card {
-    flex: 0 0 280px;
+    flex: 1 1 300px;
+    min-width: 280px;
+    max-width: 400px;
     border-radius: var(--radius);
     overflow: hidden;
     background: var(--bg-card);

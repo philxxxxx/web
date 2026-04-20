@@ -643,7 +643,7 @@ class ProjectModal {
         this.modalContent = document.getElementById('modal-project-content');
         this.closeButton = document.getElementById('close-modal');
         this.projectLinks = document.querySelectorAll('.project-link');
-        this.projectCards = document.querySelectorAll('.project-card, .hero-project-card');
+        this.projectCards = document.querySelectorAll('.project-card');
         this.projectData = this.getProjectData();
         this.init();
     }
@@ -652,29 +652,23 @@ class ProjectModal {
         return {
             1: {
                 id: 1,
-                title: '数据分析平台',
-                category: 'Web应用',
-                description: '现代化数据分析平台，实时处理和可视化大规模数据。该平台采用React和D3.js构建，提供直观的数据可视化界面，支持多种数据源接入和实时数据分析。系统具有强大的数据处理能力，能够处理TB级别的数据，并提供实时监控和预警功能。',
+                title: '法律高意向线索初筛 Copilot (AI 智能体)',
+                category: 'AI Agent',
+                description: '针对传统高客单价咨询"线索清洗成本极高"的痛点，将业务 SOP 转化为大语言模型工作流。赋予 AI 意图识别能力，自动完成案情初筛与标的额定级（A/B/C级），极大降低人工初筛成本。',
                 image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20SaaS%20dashboard%20interface%20dark%20theme%20with%20neon%20accents&image_size=landscape_16_9',
-                tags: ['React', 'D3.js', 'Node.js', 'MongoDB', 'Express'],
+                tags: ['AI Agent','Coze/Dify','业务增长'],
                 details: {
-                    '技术栈': 'React, D3.js, Node.js, MongoDB',
-                    '项目时间': '2023年6月 - 2023年12月',
-                    '项目规模': '中型',
-                    '主要功能': '数据可视化、实时监控、预警系统'
+                    '主要功能': '法律高意向线索初筛、标的额定级'
                 }
             },
             2: {
                 id: 2,
-                title: '健康管理App',
-                category: '移动应用',
-                description: '简洁高效的健康数据追踪应用，帮助用户记录和分析日常健康数据。该应用使用React Native开发，支持iOS和Android平台，集成了多种健康数据追踪功能，包括步数统计、睡眠监测、饮食记录等。应用还提供个性化的健康建议和目标设置功能。',
+                title: '高客单数据驾驶舱与策略模型',
+                category: 'web应用',
+                description: '摒弃粗放式运营，基于 SQL 与 Power BI 搭建全链路数据监控看板。引入 FRM 模型（最近咨询时间、频率、案值预估），制定线索自动化分发策略。通过数据归因优化投放，实现日耗 5W+ 且 ROI 稳定在 1.5。',
                 image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=mobile%20app%20interface%20with%20gradient%20design%20ios%20style&image_size=landscape_4_3',
                 tags: ['React Native', 'Firebase', 'Redux', 'Expo'],
                 details: {
-                    '技术栈': 'React Native, Firebase, Redux',
-                    '项目时间': '2023年3月 - 2023年8月',
-                    '项目规模': '小型',
                     '主要功能': '健康数据追踪、睡眠监测、饮食记录'
                 }
             },
@@ -692,62 +686,18 @@ class ProjectModal {
                     '主要功能': '在线购物、支付系统、国际配送'
                 }
             },
-            4: {
-                id: 4,
-                title: '智能客服系统',
-                category: 'AI应用',
-                description: '基于大语言模型的智能对话系统，为企业提供24/7的客户服务支持。该系统使用Python和OpenAI API构建，能够理解和回答客户的各种问题，提供个性化的服务体验。系统还支持多语言翻译和情感分析功能，确保与客户的有效沟通。',
-                image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20chatbot%20interface%20modern%20dark%20design%20futuristic&image_size=landscape_4_3',
-                tags: ['Python', 'OpenAI', 'FastAPI', 'NLP'],
-                details: {
-                    '技术栈': 'Python, OpenAI, FastAPI',
-                    '项目时间': '2023年11月 - 2024年3月',
-                    '项目规模': '中型',
-                    '主要功能': '智能对话、多语言支持、情感分析'
-                }
-            },
-            5: {
-                id: 5,
-                title: '个人作品集网站',
-                category: '作品集',
-                description: '现代化个人作品集网站，展示项目和技能。该网站使用纯HTML、CSS和JavaScript构建，采用响应式设计，确保在各种设备上都能提供良好的浏览体验。网站集成了多种交互效果和动画，包括滚动动画、悬停效果和粒子背景。',
-                image: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20portfolio%20website%20design%20dark%20theme&image_size=landscape_4_3',
-                tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
-                details: {
-                    '技术栈': 'HTML, CSS, JavaScript',
-                    '项目时间': '2024年1月 - 2024年2月',
-                    '项目规模': '小型',
-                    '主要功能': '项目展示、技能展示、联系表单'
-                }
-            }
         };
     }
 
     init() {
-        // 为项目链接添加点击事件
+        // 为项目链接添加点击事件（直接跳转，不打开模态框）
         this.projectLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const projectCard = link.closest('.project-card');
-                if (projectCard) {
-                    const projectId = projectCard.dataset.projectId;
-                    this.openModal(projectId);
-                }
+                // 不阻止默认行为，让链接直接跳转
             });
         });
 
-        // 为项目卡片添加点击事件
-        this.projectCards.forEach(card => {
-            card.addEventListener('click', (e) => {
-                // 避免点击链接时重复触发
-                if (!e.target.closest('.project-link')) {
-                    const projectId = card.dataset.projectId;
-                    if (projectId) {
-                        this.openModal(projectId);
-                    }
-                }
-            });
-        });
+        // 移除项目卡片的点击事件，不再打开模态框
 
         // 为关闭按钮添加点击事件
         if (this.closeButton) {
