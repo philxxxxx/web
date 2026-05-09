@@ -276,39 +276,68 @@ body{font-family:var(--font-sans);background:#fafafa;color:var(--color-text-prim
 var API_BASE = 'http://localhost:3000/api/dashboard';
 var AI_PROXY_URL = 'http://localhost:3000/api/ai/ask';
 
-var COLORS = {
-  A: '#3B6D11', B: '#BA7517', C: '#A32D2D',
-  blue: '#378ADD', teal: '#1D9E75', amber: '#EF9F27',
-  coral: '#D85A30', purple: '#7F77DD', gray: '#888780'
+/* ============================================================
+   MOCK DATA — 用于演示，无需后端
+   ============================================================ */
+var MOCK_DATA = {
+  overview: {
+    kpis: {
+      total_leads: 1247,
+      total_deals: 89,
+      conversion_rate: 7.1,
+      avg_case_value: 45.8
+    },
+    funnel: { labels: ['线索获取', '初筛通过', '律师跟进', '签约成交'], counts: [1247, 856, 342, 89] },
+    grade_distribution: { A: 312, B: 468, C: 467 },
+    daily_trend: { dates: ['05-01', '05-02', '05-03', '05-04', '05-05', '05-06', '05-07'], leads: [156, 189, 142, 203, 178, 215, 164], deals: [8, 12, 9, 15, 11, 18, 16] }
+  },
+  leads: {
+    leads: [
+      { id: 'LD20260507001', frm_score: 85, grade: 'A', case_type: '婚姻家事', value: 38, source: '百度搜索', created_at: '2026-05-07 14:32' },
+      { id: 'LD20260507002', frm_score: 72, grade: 'B', case_type: '债务纠纷', value: 25, source: '抖音信息流', created_at: '2026-05-07 13:15' },
+      { id: 'LD20260507003', frm_score: 91, grade: 'A', case_type: '房产纠纷', value: 86, source: '微信朋友圈', created_at: '2026-05-07 11:48' },
+      { id: 'LD20260507004', frm_score: 45, grade: 'C', case_type: '劳动争议', value: 8, source: '自然流量', created_at: '2026-05-07 10:22' },
+      { id: 'LD20260506001', frm_score: 68, grade: 'B', case_type: '合同纠纷', value: 32, source: '知乎广告', created_at: '2026-05-06 16:55' },
+      { id: 'LD20260506002', frm_score: 88, grade: 'A', case_type: '股权纠纷', value: 156, source: '百度搜索', created_at: '2026-05-06 15:30' }
+    ],
+    scatter_points: { A: [{x: 85, y: 38}, {x: 91, y: 86}, {x: 88, y: 156}], B: [{x: 72, y: 25}, {x: 68, y: 32}], C: [{x: 45, y: 8}] },
+    dimension_by_type: { labels: ['婚姻家事', '债务纠纷', '房产纠纷', '劳动争议', '合同纠纷', '股权纠纷'], f_scores: [82, 75, 88, 52, 65, 92], r_scores: [78, 70, 85, 48, 62, 88], m_scores: [75, 68, 90, 45, 70, 95] }
+  },
+  spend: {
+    channels: [
+      { name: '百度搜索', spend: 12500, leads: 423, deals: 35, roi: 1.26 },
+      { name: '抖音信息流', spend: 9800, leads: 356, deals: 28, roi: 1.28 },
+      { name: '微信朋友圈', spend: 7200, leads: 287, deals: 22, roi: 1.35 },
+      { name: '知乎广告', spend: 4500, leads: 181, deals: 15, roi: 1.42 },
+      { name: '自然流量', spend: 0, leads: 286, deals: 19, roi: '∞' }
+    ],
+    weekly_breakdown: { weeks: ['W18', 'W19', 'W20', 'W21'], channels: { '百度搜索': [2800, 3200, 3500, 3000], '抖音信息流': [2200, 2600, 2500, 2500], '微信朋友圈': [1800, 1600, 1900, 1900], '知乎广告': [1100, 1200, 1100, 1100] } }
+  },
+  lawyers: [
+    { name: '张律师', load: 85, follow_rate: 92, deals: 18, avg_value: 52 },
+    { name: '李律师', load: 72, follow_rate: 88, deals: 15, avg_value: 48 },
+    { name: '王律师', load: 91, follow_rate: 95, deals: 22, avg_value: 65 },
+    { name: '陈律师', load: 68, follow_rate: 82, deals: 12, avg_value: 38 },
+    { name: '刘律师', load: 78, follow_rate: 89, deals: 16, avg_value: 45 }
+  ],
+  weekly_report: { items: ['本周线索量同比增长15%，主要来自抖音信息流渠道', 'A级线索转化率达到8.2%，创月度新高', '百度搜索ROI持续优化，建议适当增加预算'] }
 };
 
-var CHANNEL_COLORS = {
-  '百度搜索': '#378ADD', '抖音信息流': '#D85A30', '微信朋友圈': '#1D9E75',
-  '知乎广告': '#7F77DD', '自然流量': '#888780'
-};
-
-/* ---- helpers ---- */
-function frmTotal(l) { return Math.round((l.f * 0.3 + l.r * 0.3 + l.m * 0.4) * 10); }
-
-function escapeHTML(str) {
-  var div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-function showLoading(el) {
-  el.innerHTML = '<div class="loading-placeholder"><i class="ti ti-loader" style="font-size:16px"></i> 加载中...</div>';
-}
-
-function showError(el, msg) {
-  el.innerHTML = '<div class="error-placeholder">数据加载失败：' + escapeHTML(msg) + '</div>';
-}
-
-/* ---- API helpers ---- */
+/* ---- API helpers with mock fallback ---- */
 async function apiGet(path) {
-  var resp = await fetch(API_BASE + path);
-  if (!resp.ok) throw new Error('HTTP ' + resp.status);
-  return resp.json();
+  try {
+    var resp = await fetch(API_BASE + path);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return resp.json();
+  } catch (e) {
+    console.log('API unavailable, using mock data:', e.message);
+    if (path.includes('/overview')) return MOCK_DATA.overview;
+    if (path.includes('/leads')) return MOCK_DATA.leads;
+    if (path.includes('/spend')) return MOCK_DATA.spend;
+    if (path.includes('/lawyers')) return MOCK_DATA.lawyers;
+    if (path.includes('/weekly-report')) return MOCK_DATA.weekly_report;
+    throw e;
+  }
 }
 
 /* ---- page navigation (event delegation) ---- */
