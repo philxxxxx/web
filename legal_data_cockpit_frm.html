@@ -273,8 +273,8 @@ body{font-family:var(--font-sans);background:#fafafa;color:var(--color-text-prim
 /* ============================================================
    CONFIGURATION — 按你的后端地址修改 API_BASE
    ============================================================ */
-var API_BASE = 'http://localhost:3000/api/dashboard';
-var AI_PROXY_URL = 'http://localhost:3000/api/ai/ask';
+var API_BASE = './data/';
+var AI_PROXY_URL = './data/';
 
 var COLORS = {
   A: '#3B6D11', B: '#BA7517', C: '#A32D2D',
@@ -304,9 +304,10 @@ function showError(el, msg) {
   el.innerHTML = '<div class="error-placeholder">数据加载失败：' + escapeHTML(msg) + '</div>';
 }
 
-/* ---- API helpers ---- */
+/* ---- API helpers - load from local JSON files ---- */
 async function apiGet(path) {
-  var resp = await fetch(API_BASE + path);
+  var fileName = path.split('?')[0].replace('/', '') + '.json';
+  var resp = await fetch(API_BASE + fileName);
   if (!resp.ok) throw new Error('HTTP ' + resp.status);
   return resp.json();
 }

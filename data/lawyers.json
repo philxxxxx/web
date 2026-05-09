@@ -1,0 +1,10 @@
+{
+  "lawyers": [
+    { "name": "张律师", "load": 85, "follow_rate": 92, "deals": 18, "avg_value": 52 },
+    { "name": "李律师", "load": 72, "follow_rate": 88, "deals": 15, "avg_value": 48 },
+    { "name": "王律师", "load": 91, "follow_rate": 95, "deals": 22, "avg_value": 65 },
+    { "name": "陈律师", "load": 68, "follow_rate": 82, "deals": 12, "avg_value": 38 },
+    { "name": "刘律师", "load": 78, "follow_rate": 89, "deals": 16, "avg_value": 45 },
+    { "name": "赵律师", "load": 55, "follow_rate": 85, "deals": 10, "avg_value": 42 }
+  ]
+}
