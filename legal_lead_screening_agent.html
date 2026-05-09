@@ -501,13 +501,150 @@
 
 <script>
 /* ═══════════════════════════════════════════════
-   API Config
-   部署时把 WORKER_URL 换成你的 Cloudflare Worker 地址
-   本地开发保持 /api/screen 即可
+   API Config - DeepSeek Direct API
+   ⚠️ API Key 会暴露在前端，建议在 DeepSeek 控制台设置限流
    ═══════════════════════════════════════════════ */
-const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-  ? '/api/screen'
-  : 'https://legal-screening.hilxxxp.workers.dev/api/screen';
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+const DEEPSEEK_API_KEY = 'sk-d87f3d47b56e457c804c37f180121a7e'; // 替换为你的 DeepSeek API Key
+const DEEPSEEK_MODEL = 'deepseek-chat';
+
+const SYSTEM_PROMPT = `你是一名专业的法律线索初筛AI助手，服务于律所客户转化团队。
+
+## 你的任务
+对潜在客户的法律咨询内容进行结构化分析，输出线索质量报告与 A/B/C 定级。
+
+## 评分维度与权重（各维度 0-10 分，加权求和得总分）
+
+| 维度 | 权重 | 评分标准 |
+|------|------|---------|
+| 标的额 | 30% | ≥100万=10 / 50-100万=8 / 20-50万=6 / 10-20万=4 / <10万=1 |
+| 胜诉可能性 | 25% | 证据链完整+法律关系清晰=8-10 / 证据一般=4-6 / 证据极差=1-2 |
+| 客户付费意向 | 25% | 主动询价/明确委托意向=8-10 / 意向模糊=4-6 / 仅咨询/拒绝付费=1-2 |
+| 执行可行性 | 12% | 对方有明确可执行资产=8-10 / 不确定=5 / 已知无资产/老赖=0 |
+| 时效紧迫性 | 8%  | 时效即将届满或已被起诉=9-10 / 较急=6 / 不急=3 |
+
+**总分 = Σ(维度分 × 权重) × 10**
+
+## 定级规则
+- **A 级**（≥72分）：2小时内电话跟进
+- **B 级**（45-71分）：24小时内跟进
+- **C 级**（<45分 或 触发任一排除规则）：48小时低优先或放弃
+
+## 强制排除规则（优先级高于总分，触发任一条直接降为 C 级）
+
+**规则1 — 老赖/执行困难**：对方是失信被执行人/老赖/已破产/名下无财产/跑路 → 执行可行性 0 分，定级不高于 C
+
+**规则2 — 纯咨询意向**：客户明显无付费打算 → 付费意向 1 分，定级不高于 C
+
+**规则3 — 零书面证据**：无任何书面凭证且对方否认 → 胜诉可能性 1 分，定级不高于 C。例外：标的额 ≥200万时降为 B 级并标注"需律师人工复核"。
+
+## 输出格式
+严格返回如下 JSON，不要任何 markdown 或多余文字：
+
+{
+  "grade": "A/B/C",
+  "confidence": 0.88,
+  "case_type": "案件类型",
+  "amount_estimate": "约XXX万元",
+  "urgency": "高/中/低",
+  "evidence_strength": "充分/一般/薄弱",
+  "winning_rate": "高/中/低",
+  "execution_risk": "低/中/高",
+  "intent_signal": "强/中/弱",
+  "exclusion_rules_triggered": [],
+  "score_breakdown": {
+    "amount": 8,
+    "winning": 6,
+    "intent": 7,
+    "execution": 5,
+    "urgency": 4,
+    "total": 68
+  },
+  "key_facts": ["关键事实1", "关键事实2"],
+  "risks": ["风险点1"],
+  "actions": ["建议跟进动作1", "动作2"],
+  "reasoning": "2-3句话说明定级理由，必须提及加权总分"
+}`;
+
+/* ── Mock data（API 调用失败时使用） ── */
+const mockResults = [
+  {
+    grade: "A", confidence: 0.92, case_type: "婚姻家事（离婚/财产分割）",
+    amount_estimate: "约600万元", urgency: "中", evidence_strength: "充分",
+    winning_rate: "高", execution_risk: "低", intent_signal: "强",
+    exclusion_rules_triggered: [],
+    score_breakdown: { amount: 10, winning: 9, intent: 10, execution: 8, urgency: 5, total: 90 },
+    key_facts: ["婚内房产400万+公司股权200万", "对方出轨有录音证据", "客户明确表示已决定委托律师"],
+    risks: ["股权价值评估可能存在争议", "对方可能转移资产"],
+    actions: ["2小时内电话联系确认委托意向", "准备婚姻法及公司法相关法律意见", "预约面谈时间"],
+    reasoning: "标的额600万(10分)达A级门槛，证据充分(9分)，付费意向极强(10分)，加权总分90分，定级A类高意向线索，建议立即电话跟进。"
+  },
+  {
+    grade: "B", confidence: 0.85, case_type: "债务追偿/借贷纠纷",
+    amount_estimate: "约280万元", urgency: "低", evidence_strength: "薄弱",
+    winning_rate: "中", execution_risk: "高", intent_signal: "中",
+    exclusion_rules_triggered: ["规则3"],
+    score_breakdown: { amount: 9, winning: 3, intent: 5, execution: 3, urgency: 3, total: 53 },
+    key_facts: ["朋友欠款280万口头约定", "无书面借条", "听说对方房产已过户给配偶"],
+    risks: ["无书面证据，胜诉可能性低", "对方可能已转移资产至配偶名下", "执行困难"],
+    actions: ["24小时内联系客户补充证据", "建议收集微信聊天记录/转账凭证", "评估是否启动诉前财产保全"],
+    reasoning: "标的额280万较高(9分)，但触发零书面证据排除规则，证据极差(3分)，执行风险高(3分)，加权总分53分，定级B类，需律师人工复核证据可行性。"
+  },
+  {
+    grade: "C", confidence: 0.78, case_type: "合同纠纷/商事诉讼",
+    amount_estimate: "约500万元", urgency: "低", evidence_strength: "一般",
+    winning_rate: "中", execution_risk: "高", intent_signal: "弱",
+    exclusion_rules_triggered: ["规则1", "规则2"],
+    score_breakdown: { amount: 10, winning: 5, intent: 1, execution: 0, urgency: 3, total: 40 },
+    key_facts: ["对方欠款500万合同款", "对方已破产", "法院执行不到财产"],
+    risks: ["对方无任何可执行资产", "客户仅为咨询，无付费意向"],
+    actions: ["标记为低优先级线索", "48小时跟进评估是否放弃"],
+    reasoning: "触发排除规则1（破产无财产）和规则2（纯咨询意向），执行可行性0分，付费意向1分，总分40分，强制降为C类，建议评估后放弃或低优先级跟进。"
+  }
+];
+
+function isValidJson(str) {
+  try { JSON.parse(str); return true; } catch { return false; }
+}
+
+async function callDeepSeekAPI(userContent) {
+  const resp = await fetch(DEEPSEEK_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: DEEPSEEK_MODEL,
+      max_tokens: 2000,
+      temperature: 0.3,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: userContent }
+      ]
+    })
+  });
+
+  if (!resp.ok) {
+    let errMsg = `DeepSeek API HTTP ${resp.status}`;
+    try {
+      const errData = await resp.json();
+      errMsg = errData.error?.message || errData.message || errMsg;
+    } catch {}
+    throw new Error(errMsg);
+  }
+
+  const data = await resp.json();
+  const text = data.choices?.[0]?.message?.content || '';
+  let clean = text.replace(/```json|```/g, '').trim();
+
+  if (!isValidJson(clean)) {
+    const match = clean.match(/\{[\s\S]*\}/);
+    clean = match ? match[0] : '';
+    if (!clean) throw new Error('AI 返回格式异常，无法解析 JSON');
+  }
+  return JSON.parse(clean);
+}
 
 /* ═══════════════════════════════════════════════
    Tab Switching
@@ -720,14 +857,8 @@ async function runFree() {
   setLoading('btn-free', true);
   showLoading();
   try {
-    const resp = await fetch(API_BASE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: `请分析以下法律咨询内容：\n\n${text}` })
-    });
-    if (!resp.ok) { const err = await resp.json(); throw new Error(err.error || '服务异常'); }
-    const result = await resp.json();
-    renderResult(result.data);
+    const result = await callDeepSeekAPI(`请分析以下法律咨询内容：\n\n${text}`);
+    renderResult(result);
   } catch(e) {
     showError('分析失败', e.message, runFree);
   }
@@ -752,14 +883,8 @@ async function runForm() {
   setLoading('btn-form', true);
   showLoading();
   try {
-    const resp = await fetch(API_BASE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: `案件类型：${type}\n预估标的额：${amount || '未填写'}万元\n证据情况：${evidence}\n时效紧迫性：${urgency}\n客户意向：${intent || '未选择'}\n案情补充：${desc || '无'}` })
-    });
-    if (!resp.ok) { const err = await resp.json(); throw new Error(err.error || '服务异常'); }
-    const result = await resp.json();
-    renderResult(result.data);
+    const result = await callDeepSeekAPI(`案件类型：${type}\n预估标的额：${amount || '未填写'}万元\n证据情况：${evidence}\n时效紧迫性：${urgency}\n客户意向：${intent || '未选择'}\n案情补充：${desc || '无'}`);
+    renderResult(result);
   } catch(e) {
     showError('分析失败', e.message, runForm);
   }
