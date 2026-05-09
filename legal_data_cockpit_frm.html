@@ -827,6 +827,23 @@ function initAIPage() { loadWeeklyReport(); }
 
 /* ---- boot ---- */
 initOverview();
+
+/* ---- filter change listeners ---- */
+document.getElementById('date-range')?.addEventListener('change', function() {
+  var activePage = document.querySelector('.page.act');
+  if (activePage) {
+    var pageId = activePage.id.replace('p-', '');
+    showPage(pageId);
+  }
+});
+
+document.getElementById('biz-type')?.addEventListener('change', function() {
+  var activePage = document.querySelector('.page.act');
+  if (activePage) {
+    var pageId = activePage.id.replace('p-', '');
+    showPage(pageId);
+  }
+});
 </script>
 </body>
 </html>
