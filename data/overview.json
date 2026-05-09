@@ -3,7 +3,19 @@
     "total_leads": 1247,
     "total_deals": 89,
     "conversion_rate": 7.1,
-    "avg_case_value": 45.8
+    "avg_case_value": 45.8,
+    "a_ratio": 25.0,
+    "revenue": 4076200,
+    "cpl": 78,
+    "roi": 135.5,
+    "deltas": {
+      "total_leads": 12.5,
+      "a_ratio": 3.2,
+      "conversion_rate": 1.8,
+      "revenue": 18.3,
+      "cpl": -5.2,
+      "roi": 8.7
+    }
   },
   "funnel": {
     "labels": ["线索获取", "初筛通过", "律师跟进", "签约成交"],
