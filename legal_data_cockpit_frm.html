@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法律高客单数据驾驶舱 — FRM 模型评分与投放 ROI 分析</title>
+<style>
+:root {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #666;
+  --color-text-danger: #A32D2D;
+  --color-background-primary: #fff;
+  --color-background-secondary: #f5f5f5;
+  --color-border-secondary: #d0d0d0;
+  --color-border-tertiary: #e5e5e5;
+  --border-radius-md: 6px;
+  --border-radius-lg: 10px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:#fafafa;color:var(--color-text-primary)}
+
+.dash{padding:1rem 0}
+
+/* ---- screen reader only ---- */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ---- utility text classes ---- */
+.t-muted-xs{font-size:11px;color:var(--color-text-secondary)}
+.t-muted-sm{font-size:12px;color:var(--color-text-secondary)}
+.t-muted{font-size:13px;color:var(--color-text-secondary)}
+.t-strong{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+
+/* ---- navigation ---- */
+.top-nav{display:flex;gap:6px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:1rem}
+.nav-btn{padding:5px 14px;border:0.5px solid transparent;border-radius:var(--border-radius-md);background:transparent;font-size:13px;color:var(--color-text-secondary);cursor:pointer;white-space:nowrap}
+.nav-btn.act{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-secondary)}
+
+/* ---- pages ---- */
+.page{display:none}
+.page.act{display:block}
+
+/* ---- KPI cards ---- */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.5rem}
+.kpi{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px}
+.kpi-val{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.kpi-lbl{font-size:12px;color:var(--color-text-secondary);margin-top:3px}
+.kpi-delta{font-size:11px;margin-top:4px}
+.up{color:#3B6D11}.dn{color:#A32D2D}
+
+/* ---- cards & layout ---- */
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem}
+
+/* ---- section header ---- */
+.section-hd{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.section-hd .ti{font-size:15px;color:var(--color-text-secondary)}
+
+/* ---- charts ---- */
+.chart-wrap{position:relative;width:100%}
+
+/* ---- FRM ---- */
+.frm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:1rem}
+.frm-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;background:var(--color-background-primary)}
+.frm-score{font-size:28px;font-weight:500}
+.frm-dim{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px}
+.progress-bg{height:5px;border-radius:3px;background:var(--color-border-tertiary);overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;border-radius:3px;transition:width .5s}
+
+/* ---- lead table ---- */
+.lead-table{width:100%;font-size:13px;border-collapse:collapse}
+.lead-table th{font-size:11px;color:var(--color-text-secondary);text-align:left;padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);font-weight:500}
+.lead-table td{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:middle}
+.lead-table tr:last-child td{border-bottom:none}
+
+/* ---- badges ---- */
+.badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:4px}
+.ba{background:#EAF3DE;color:#3B6D11}
+.bb{background:#FAEEDA;color:#854F0B}
+.bc{background:#FCEBEB;color:#A32D2D}
+.bp{background:#E6F1FB;color:#185FA5}
+
+/* ---- AI advice box ---- */
+.ai-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;font-size:13px;color:var(--color-text-primary);line-height:1.7}
+.ai-item{display:flex;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start}
+.ai-item:last-child{border-bottom:none}
+.ai-num{font-size:11px;font-weight:500;color:var(--color-text-secondary);flex-shrink:0;margin-top:2px;min-width:16px}
+
+/* ---- filter row ---- */
+.filter-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.filter-row select,.filter-row input{font-size:13px;padding:4px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);height:30px}
+
+/* ---- legend ---- */
+.legend-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px;font-size:12px;color:var(--color-text-secondary)}
+.leg-dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:4px;vertical-align:middle}
+
+/* ---- spend bars ---- */
+.spend-bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:6px 0}
+
+/* ---- ROI list ---- */
+.roi-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+.roi-row:last-child{border-bottom:none}
+
+/* ---- suggest buttons ---- */
+.suggest-btn{padding:6px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;font-size:13px;color:var(--color-text-primary);cursor:pointer;display:flex;align-items:center;gap:6px}
+.suggest-btn:hover{background:var(--color-background-secondary)}
+
+/* ---- tab mini ---- */
+.tab-mini{display:flex;gap:4px;margin-bottom:10px}
+.tab-mini button{font-size:12px;padding:3px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.tab-mini button.act{background:var(--color-background-secondary);color:var(--color-text-primary)}
+
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:1rem 0}
+
+/* ---- loading & error states ---- */
+.loading-placeholder{display:flex;gap:8px;align-items:center;color:var(--color-text-secondary);font-size:13px;padding:1.5rem;justify-content:center}
+.error-placeholder{color:var(--color-text-danger);font-size:13px;padding:1rem;text-align:center}
+</style>
+</head>
+<body>
+
+<h2 class="sr-only">法律高客单数据驾驶舱 — 全链路线索监控、FRM模型评分、投放ROI分析与AI策略建议</h2>
+
+<div class="dash">
+<div class="top-nav">
+  <button class="nav-btn act" data-page="overview"><i class="ti ti-layout-dashboard" aria-hidden="true"></i>全链路概览</button>
+  <button class="nav-btn" data-page="frm"><i class="ti ti-users" aria-hidden="true"></i>FRM 模型</button>
+  <button class="nav-btn" data-page="spend"><i class="ti ti-coin" aria-hidden="true"></i>投放与 ROI</button>
+  <button class="nav-btn" data-page="distrib"><i class="ti ti-arrows-split" aria-hidden="true"></i>线索分发</button>
+  <button class="nav-btn" data-page="ai"><i class="ti ti-brain" aria-hidden="true"></i>AI 策略建议</button>
+</div>
+
+<!-- PAGE 1: 全链路概览 -->
+<div id="p-overview" class="page act">
+  <div class="filter-row">
+    <label for="date-range" class="sr-only">日期范围</label>
+    <select id="date-range">
+      <option>最近 7 天</option><option selected>最近 30 天</option><option>最近 90 天</option>
+    </select>
+    <label for="biz-type" class="sr-only">业务类型</label>
+    <select id="biz-type">
+      <option>全部业务</option><option>婚姻家事</option><option>劳动纠纷</option><option>合同纠纷</option><option>债务追偿</option>
+    </select>
+  </div>
+  <div class="kpi-row" id="kpi-row"></div>
+  <div class="two-col">
+    <div class="card">
+      <p class="section-hd"><i class="ti ti-trending-up" aria-hidden="true"></i>线索漏斗</p>
+      <div class="chart-wrap" style="height:200px"><canvas id="funnelChart" role="img" aria-label="线索漏斗图：从线索到成交各阶段转化数量"></canvas></div>
+    </div>
+    <div class="card">
+      <p class="section-hd"><i class="ti ti-chart-pie" aria-hidden="true"></i>A/B/C 定级分布</p>
+      <div class="legend-row"><span><span class="leg-dot" style="background:#3B6D11"></span>A级</span><span><span class="leg-dot" style="background:#BA7517"></span>B级</span><span><span class="leg-dot" style="background:#A32D2D"></span>C级</span></div>
+      <div class="chart-wrap" style="height:170px"><canvas id="gradeChart" role="img" aria-label="饼图：A/B/C线索定级分布比例"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <p class="section-hd"><i class="ti ti-calendar-stats" aria-hidden="true"></i>每日线索量 & 成单趋势</p>
+    <div class="legend-row"><span><span class="leg-dot" style="background:#378ADD"></span>线索量</span><span><span class="leg-dot" style="background:#639922;border:1.5px dashed #639922;background:transparent"></span>成单数</span></div>
+    <div class="chart-wrap" style="height:180px"><canvas id="trendChart" role="img" aria-label="折线图：每日线索量与成单趋势"></canvas></div>
+  </div>
+</div>
+
+<!-- PAGE 2: FRM 模型 -->
+<div id="p-frm" class="page">
+  <div class="card">
+    <p class="section-hd"><i class="ti ti-info-circle" aria-hidden="true"></i>FRM 维度说明</p>
+    <div class="three-col" style="margin-bottom:0">
+      <div class="t-muted" style="line-height:1.6"><strong class="t-strong">F — 最近咨询时间</strong><br>距今越近得分越高；超过14天未回访自动降档</div>
+      <div class="t-muted" style="line-height:1.6"><strong class="t-strong">R — 咨询频率</strong><br>主动回访次数越多意向越强；仅1次咨询记低频</div>
+      <div class="t-muted" style="line-height:1.6"><strong class="t-strong">M — 案值预估</strong><br>标的额折算律师费潜在收入；结合定级系数加权</div>
+    </div>
+  </div>
+
+  <p class="section-hd" style="margin-bottom:10px"><i class="ti ti-users" aria-hidden="true"></i>当前线索 FRM 评分列表</p>
+  <div class="card" style="padding:0.75rem">
+    <table class="lead-table" id="frm-table">
+      <thead><tr>
+        <th>客户</th><th>案件类型</th><th>F 近时</th><th>R 频率</th><th>M 案值</th><th>FRM总分</th><th>定级</th><th>建议</th>
+      </tr></thead>
+      <tbody id="frm-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <p class="section-hd"><i class="ti ti-chart-scatter" aria-hidden="true"></i>FRM 散点分布（M × F）</p>
+      <div class="chart-wrap" style="height:200px"><canvas id="scatterChart" role="img" aria-label="散点图：案值M与最近咨询时间F的分布，按A/B/C着色"></canvas></div>
+    </div>
+    <div class="card">
+      <p class="section-hd"><i class="ti ti-chart-bar" aria-hidden="true"></i>各维度平均分（按案件类型）</p>
+      <div class="chart-wrap" style="height:200px"><canvas id="radarByType" role="img" aria-label="柱状图：各案件类型F/R/M平均得分对比"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: 投放与ROI -->
+<div id="p-spend" class="page">
+  <div class="kpi-row" id="spend-kpi-row"></div>
+
+  <div class="card">
+    <p class="section-hd"><i class="ti ti-chart-bar" aria-hidden="true"></i>渠道日耗分布</p>
+    <div id="spend-bars"></div>
+    <div class="chart-wrap" style="height:220px;margin-top:12px"><canvas id="spendChart" role="img" aria-label="柱状图：各渠道每日广告投放消耗对比"></canvas></div>
+  </div>
+
+  <div class="card">
+    <p class="section-hd"><i class="ti ti-receipt" aria-hidden="true"></i>渠道 ROI 对比</p>
+    <div id="roi-list"></div>
+  </div>
+
+  <div class="card">
+    <p class="section-hd"><i class="ti ti-bulb" aria-hidden="true"></i>AI 投放建议</p>
+    <div class="ai-box" id="spend-advice"></div>
+  </div>
+</div>
+
+<!-- PAGE 4: 线索分发 -->
+<div id="p-distrib" class="page">
+  <div class="card">
+    <p class="section-hd"><i class="ti ti-settings" aria-hidden="true"></i>自动分发规则配置</p>
+    <p class="t-muted" style="margin-bottom:12px">根据 FRM 总分与定级，系统自动将线索路由至对应律师/团队</p>
+    <div id="rules-list"></div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <p class="section-hd"><i class="ti ti-user-check" aria-hidden="true"></i>律师负载监控</p>
+      <div id="lawyer-load"></div>
+    </div>
+    <div class="card">
+      <p class="section-hd"><i class="ti ti-chart-line" aria-hidden="true"></i>分发后跟进率</p>
+      <div class="chart-wrap" style="height:180px"><canvas id="followChart" role="img" aria-label="柱状图：各律师线索跟进率与成单率"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 5: AI策略建议 -->
+<div id="p-ai" class="page">
+  <div class="card">
+    <p class="section-hd"><i class="ti ti-brain" aria-hidden="true"></i>向 AI 提问策略</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px" id="ai-suggest-btns">
+      <button class="suggest-btn" data-question="本周哪个渠道ROI最差？应该如何调整预算？">渠道预算怎么调 ↗</button>
+      <button class="suggest-btn" data-question="FRM模型中哪类线索流失最严重？给出挽回策略">FRM流失挽回策略 ↗</button>
+      <button class="suggest-btn" data-question="当前A级线索转化率低于预期，分析原因并给出提升方案">A级转化提升方案 ↗</button>
+      <button class="suggest-btn" data-question="如何优化线索分发规则，让成单率最高的律师承接更多A级线索？">分发规则优化 ↗</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <label for="ai-input" class="sr-only">输入策略问题</label>
+      <input type="text" id="ai-input" placeholder="输入你的策略问题..." style="flex:1;font-size:13px;padding:6px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);height:34px">
+      <button class="suggest-btn" id="ai-send-btn"><i class="ti ti-send" aria-hidden="true" style="font-size:14px"></i> 发送 ↗</button>
+    </div>
+  </div>
+
+  <div class="card" id="ai-answer-card" style="display:none">
+    <p class="section-hd"><i class="ti ti-sparkles" aria-hidden="true"></i>AI 策略分析</p>
+    <div id="ai-answer" class="ai-box" style="min-height:80px"></div>
+  </div>
+
+  <div class="card">
+    <p class="section-hd"><i class="ti ti-calendar-event" aria-hidden="true"></i>本周自动生成策略报告摘要</p>
+    <div id="weekly-report" class="ai-box"></div>
+  </div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"
+  integrity="sha384-dug+JxfBvklEQdJ4AYuBBAIScUz0bVN73xpy273gcAwHjb3qI0fXmuYNaNfdyYJG"
+  crossorigin="anonymous"></script>
+<script>
+/* ============================================================
+   CONFIGURATION — 按你的后端地址修改 API_BASE
+   ============================================================ */
+var API_BASE = 'http://localhost:3000/api/dashboard';
+var AI_PROXY_URL = 'http://localhost:3000/api/ai/ask';
+
+var COLORS = {
+  A: '#3B6D11', B: '#BA7517', C: '#A32D2D',
+  blue: '#378ADD', teal: '#1D9E75', amber: '#EF9F27',
+  coral: '#D85A30', purple: '#7F77DD', gray: '#888780'
+};
+
+var CHANNEL_COLORS = {
+  '百度搜索': '#378ADD', '抖音信息流': '#D85A30', '微信朋友圈': '#1D9E75',
+  '知乎广告': '#7F77DD', '自然流量': '#888780'
+};
+
+/* ---- helpers ---- */
+function frmTotal(l) { return Math.round((l.f * 0.3 + l.r * 0.3 + l.m * 0.4) * 10); }
+
+function escapeHTML(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function showLoading(el) {
+  el.innerHTML = '<div class="loading-placeholder"><i class="ti ti-loader" style="font-size:16px"></i> 加载中...</div>';
+}
+
+function showError(el, msg) {
+  el.innerHTML = '<div class="error-placeholder">数据加载失败：' + escapeHTML(msg) + '</div>';
+}
+
+/* ---- API helpers ---- */
+async function apiGet(path) {
+  var resp = await fetch(API_BASE + path);
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  return resp.json();
+}
+
+/* ---- page navigation (event delegation) ---- */
+document.querySelector('.top-nav').addEventListener('click', function(e) {
+  var btn = e.target.closest('.nav-btn');
+  if (!btn) return;
+  showPage(btn.dataset.page);
+});
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('act'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('act'); });
+  var page = document.getElementById('p-' + id);
+  if (page) page.classList.add('act');
+  var navBtn = document.querySelector('.nav-btn[data-page="' + id + '"]');
+  if (navBtn) navBtn.classList.add('act');
+
+  if (id === 'overview') initOverview();
+  if (id === 'frm') initFRM();
+  if (id === 'spend') initSpend();
+  if (id === 'distrib') initDistrib();
+  if (id === 'ai') initAIPage();
+}
+
+/* ---- shared filter helpers ---- */
+function getRangeFilter() {
+  var sel = document.getElementById('date-range');
+  return sel ? sel.value : '最近 30 天';
+}
+
+function getBizFilter() {
+  var sel = document.getElementById('biz-type');
+  return sel ? sel.value : '全部业务';
+}
+
+/* ============================================================
+   PAGE 1: 全链路概览
+   API: GET /api/dashboard/overview?range=&biz_type=
+   ============================================================ */
+var overviewCharts = {};
+
+function deltaText(delta, suffix) {
+  if (delta == null) return '';
+  var abs = Math.abs(delta);
+  var prefix = delta >= 0 ? '↑ ' : '↓ ';
+  return prefix + abs + (suffix || '%');
+}
+
+function renderOverviewKPIs(kpis) {
+  var d = kpis.deltas || {};
+  // goodWhenUp = true for metrics where increase is positive (revenue, ROI, A-ratio)
+  // goodWhenUp = false for metrics where decrease is positive (CPL)
+  var items = [
+    { val: kpis.total_leads.toLocaleString(), lbl: '总线索数', delta: deltaText(d.total_leads), up: (d.total_leads || 0) >= 0 },
+    { val: kpis.a_ratio + '%', lbl: 'A级占比', delta: deltaText(d.a_ratio), up: (d.a_ratio || 0) >= 0 },
+    { val: kpis.conversion_rate.toFixed(1) + '%', lbl: '线索→成单率', delta: deltaText(d.conversion_rate), up: (d.conversion_rate || 0) >= 0 },
+    { val: '¥' + kpis.revenue.toLocaleString(), lbl: '本月合同额', delta: deltaText(d.revenue), up: (d.revenue || 0) >= 0 },
+    { val: '¥' + kpis.cpl.toLocaleString(), lbl: '平均 CPL', delta: deltaText(d.cpl), up: (d.cpl || 0) <= 0 },
+    { val: kpis.roi + '%', lbl: '综合 ROI', delta: deltaText(d.roi), up: (d.roi || 0) >= 0 }
+  ];
+  document.getElementById('kpi-row').innerHTML = items.map(function(k) {
+    return '<div class="kpi"><div class="kpi-val">' + k.val + '</div><div class="kpi-lbl">' + k.lbl + '</div><div class="kpi-delta ' + (k.up ? 'up' : 'dn') + '">' + k.delta + '</div></div>';
+  }).join('');
+}
+
+function upsertFunnelChart(stages) {
+  var labels = stages.map(function(s) { return s.stage; });
+  var counts = stages.map(function(s) { return s.count; });
+  if (overviewCharts.funnel) {
+    overviewCharts.funnel.data.labels = labels;
+    overviewCharts.funnel.data.datasets[0].data = counts;
+    overviewCharts.funnel.update();
+  } else {
+    overviewCharts.funnel = new Chart(document.getElementById('funnelChart'), {
+      type: 'bar',
+      data: { labels: labels,
+        datasets: [{ label: '数量', data: counts,
+          backgroundColor: ['#B5D4F4','#85B7EB','#378ADD','#185FA5','#1D9E75','#3B6D11'],
+          borderRadius: 3, borderSkipped: false }] },
+      options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { grid: { display: false } }, y: { grid: { display: false } } } }
+    });
+  }
+}
+
+function upsertGradeChart(dist) {
+  var data = [dist.A, dist.B, dist.C];
+  if (overviewCharts.grade) {
+    overviewCharts.grade.data.datasets[0].data = data;
+    overviewCharts.grade.update();
+  } else {
+    overviewCharts.grade = new Chart(document.getElementById('gradeChart'), {
+      type: 'doughnut',
+      data: { labels: ['A级','B级','C级'],
+        datasets: [{ data: data, backgroundColor: [COLORS.A, COLORS.B, COLORS.C],
+          borderWidth: 0, hoverOffset: 4 }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '60%',
+        plugins: { legend: { display: false } } }
+    });
+  }
+}
+
+function upsertTrendChart(trend) {
+  var labels = trend.map(function(d) { return d.day; });
+  var leadsD = trend.map(function(d) { return d.leads; });
+  var dealsD = trend.map(function(d) { return d.deals; });
+  if (overviewCharts.trend) {
+    overviewCharts.trend.data.labels = labels;
+    overviewCharts.trend.data.datasets[0].data = leadsD;
+    overviewCharts.trend.data.datasets[1].data = dealsD;
+    overviewCharts.trend.update();
+  } else {
+    overviewCharts.trend = new Chart(document.getElementById('trendChart'), {
+      type: 'line',
+      data: { labels: labels, datasets: [
+        { label: '线索量', data: leadsD, borderColor: COLORS.blue,
+          backgroundColor: 'rgba(55,138,221,0.08)', fill: true, tension: 0.4, pointRadius: 0 },
+        { label: '成单数', data: dealsD, borderColor: COLORS.A,
+          borderDash: [4,3], fill: false, tension: 0.4, pointRadius: 0 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { ticks: { maxTicksLimit: 8, autoSkip: true }, grid: { display: false } },
+                   y: { grid: { color: 'rgba(0,0,0,0.04)' } } } }
+    });
+  }
+}
+
+async function updateOverview() {
+  var kpiRow = document.getElementById('kpi-row');
+  showLoading(kpiRow);
+  try {
+    var data = await apiGet('/overview?range=' + encodeURIComponent(getRangeFilter()) +
+                            '&biz_type=' + encodeURIComponent(getBizFilter()));
+    cachedOverview = data;
+    renderOverviewKPIs(data.kpis);
+    upsertFunnelChart(data.funnel);
+    upsertGradeChart(data.grade_distribution);
+    upsertTrendChart(data.daily_trend);
+  } catch (e) {
+    showError(kpiRow, e.message);
+  }
+}
+
+function initOverview() { updateOverview(); }
+
+document.getElementById('date-range').addEventListener('change', updateOverview);
+document.getElementById('biz-type').addEventListener('change', updateOverview);
+
+/* ============================================================
+   PAGE 2: FRM 模型
+   API: GET /api/dashboard/leads?range=&biz_type=
+   ============================================================ */
+var frmCharts = {};
+
+function renderFRMTable(leads) {
+  document.getElementById('frm-tbody').innerHTML = leads.map(function(l) {
+    var total = frmTotal(l);
+    var gc = l.grade === 'A' ? 'ba' : l.grade === 'B' ? 'bb' : 'bc';
+    var actionHtml = l.grade === 'A'
+      ? '<span class="badge ba">' + escapeHTML(l.action) + '</span>'
+      : l.grade === 'B'
+      ? '<span class="badge bb">' + escapeHTML(l.action) + '</span>'
+      : '<span class="badge bc">' + escapeHTML(l.action) + '</span>';
+    return '<tr>' +
+      '<td style="font-weight:500">' + escapeHTML(l.name) + '</td>' +
+      '<td><span class="badge bp">' + escapeHTML(l.type) + '</span></td>' +
+      '<td>' + l.f + '/10</td><td>' + l.r + '/10</td><td>' + l.m + '/10</td>' +
+      '<td style="font-weight:500">' + total + '</td>' +
+      '<td><span class="badge ' + gc + '">' + l.grade + '级</span></td>' +
+      '<td>' + actionHtml + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function upsertScatterChart(points) {
+  function fmt(grade) {
+    return points.filter(function(d) { return d.grade === grade; })
+      .map(function(d) { return { x: d.x, y: d.y, r: d.r }; });
+  }
+  if (frmCharts.scatter) {
+    frmCharts.scatter.data.datasets[0].data = fmt('A');
+    frmCharts.scatter.data.datasets[1].data = fmt('B');
+    frmCharts.scatter.data.datasets[2].data = fmt('C');
+    frmCharts.scatter.update();
+  } else {
+    frmCharts.scatter = new Chart(document.getElementById('scatterChart'), {
+      type: 'bubble',
+      data: { datasets: [
+        { label: 'A级', data: fmt('A'), backgroundColor: 'rgba(59,109,17,0.6)' },
+        { label: 'B级', data: fmt('B'), backgroundColor: 'rgba(186,117,23,0.6)' },
+        { label: 'C级', data: fmt('C'), backgroundColor: 'rgba(163,45,45,0.5)' }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { title: { display: true, text: 'M 案值' }, min: 0, max: 11 },
+                   y: { title: { display: true, text: 'F 近时' }, min: 0, max: 11 } } }
+    });
+  }
+}
+
+function upsertDimChart(dim) {
+  if (frmCharts.radar) {
+    frmCharts.radar.data.labels = dim.labels;
+    frmCharts.radar.data.datasets[0].data = dim.f_scores;
+    frmCharts.radar.data.datasets[1].data = dim.r_scores;
+    frmCharts.radar.data.datasets[2].data = dim.m_scores;
+    frmCharts.radar.update();
+  } else {
+    frmCharts.radar = new Chart(document.getElementById('radarByType'), {
+      type: 'bar',
+      data: { labels: dim.labels, datasets: [
+        { label: 'F近时', data: dim.f_scores, backgroundColor: 'rgba(55,138,221,0.7)', borderRadius: 2 },
+        { label: 'R频率', data: dim.r_scores, backgroundColor: 'rgba(31,158,117,0.7)', borderRadius: 2 },
+        { label: 'M案值', data: dim.m_scores, backgroundColor: 'rgba(239,159,39,0.7)', borderRadius: 2 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { grid: { display: false } },
+                   y: { max: 10, grid: { color: 'rgba(0,0,0,0.04)' } } } }
+    });
+  }
+}
+
+async function initFRM() {
+  var tbody = document.getElementById('frm-tbody');
+  showLoading(tbody);
+  try {
+    var data = await apiGet('/leads?range=' + encodeURIComponent(getRangeFilter()) +
+                            '&biz_type=' + encodeURIComponent(getBizFilter()));
+    renderFRMTable(data.leads);
+    upsertScatterChart(data.scatter_points);
+    upsertDimChart(data.dimension_by_type);
+  } catch (e) {
+    showError(tbody, e.message);
+  }
+}
+
+/* ============================================================
+   PAGE 3: 投放与 ROI
+   API: GET /api/dashboard/spend?range=
+   ============================================================ */
+var spendCharts = {};
+
+function renderSpendKPIs(channels) {
+  var total = channels.reduce(function(a, c) { return a + c.spend; }, 0);
+  var totalRev = channels.reduce(function(a, c) { return a + c.revenue; }, 0);
+  var totalLeads = channels.reduce(function(a, c) { return a + c.leads; }, 0);
+  var totalDeals = channels.reduce(function(a, c) { return a + c.deals; }, 0);
+  var roi = Math.round((totalRev - total) / total * 100);
+  var cpl = Math.round(total / totalLeads);
+  var cpa = Math.round(total / totalDeals);
+
+  var kpis = [
+    { val: '¥' + total.toLocaleString(), lbl: '本月总日耗', delta: '↑ 8% vs 上月', up: true },
+    { val: roi + '%', lbl: '综合 ROI', delta: '↑ 28% vs 上月', up: true },
+    { val: '¥' + cpl.toLocaleString(), lbl: '单线索成本 CPL', delta: '↓ ¥180 vs 上月', up: true },
+    { val: '¥' + cpa.toLocaleString(), lbl: '单成单成本 CPA', delta: '↓ ¥620 vs 上月', up: true }
+  ];
+  document.getElementById('spend-kpi-row').innerHTML = kpis.map(function(k) {
+    return '<div class="kpi"><div class="kpi-val">' + k.val + '</div><div class="kpi-lbl">' + k.lbl + '</div><div class="kpi-delta ' + (k.up ? 'up' : 'dn') + '">' + k.delta + '</div></div>';
+  }).join('');
+}
+
+function renderSpendBars(channels, total) {
+  document.getElementById('spend-bars').innerHTML = channels.map(function(c) {
+    var pct = total ? Math.round(c.spend / total * 100) : 0;
+    return '<div style="margin-bottom:8px">' +
+      '<div style="display:flex;justify-content:space-between;margin-bottom:3px">' +
+        '<span class="t-muted-sm">' + escapeHTML(c.name) + '</span>' +
+        '<span class="t-muted-sm">¥' + c.spend.toLocaleString() + ' (' + pct + '%)</span>' +
+      '</div>' +
+      '<div class="progress-bg"><div class="progress-fill" style="width:' + pct + '%;background:' + (c.color || COLORS.blue) + '"></div></div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderROIList(channels) {
+  var paid = channels.filter(function(c) { return c.spend > 0; })
+    .sort(function(a, b) { return (b.revenue - b.spend) / b.spend - (a.revenue - a.spend) / a.spend; });
+  document.getElementById('roi-list').innerHTML = paid.map(function(c, i) {
+    var roi = Math.round((c.revenue - c.spend) / c.spend * 100);
+    var cpl = Math.round(c.spend / c.leads);
+    var isTop = i === 0;
+    var badgeClass = roi >= 200 ? 'ba' : roi >= 100 ? 'bb' : 'bc';
+    return '<div class="roi-row">' +
+      '<span class="t-strong" style="font-weight:' + (isTop ? '500' : '400') + '">' + escapeHTML(c.name) + '</span>' +
+      '<div style="display:flex;gap:12px;align-items:center">' +
+        '<span class="t-muted-sm">CPL ¥' + cpl + '</span>' +
+        '<span class="t-muted-sm">成单 ' + c.deals + '</span>' +
+        '<span class="badge ' + badgeClass + '">ROI ' + roi + '%</span>' +
+        (isTop ? '<span class="badge bp">最优渠道</span>' : '') +
+      '</div></div>';
+  }).join('');
+}
+
+function renderSpendAdvice(items) {
+  document.getElementById('spend-advice').innerHTML = items.map(function(item, i) {
+    return '<div class="ai-item"><span class="ai-num">' + (i + 1) + '.</span><span><strong>' + escapeHTML(item.title) + '</strong> ' + escapeHTML(item.content) + '</span></div>';
+  }).join('');
+}
+
+function upsertSpendChart(weekly) {
+  var paidChannels = Object.keys(weekly).filter(function(k) { return k !== 'weeks'; });
+  var datasets = paidChannels.map(function(name) {
+    return {
+      label: name,
+      data: weekly[name],
+      backgroundColor: CHANNEL_COLORS[name] || COLORS.blue,
+      borderRadius: 2
+    };
+  });
+  if (spendCharts.main) {
+    spendCharts.main.data.labels = weekly.weeks;
+    spendCharts.main.data.datasets = datasets;
+    spendCharts.main.update();
+  } else {
+    spendCharts.main = new Chart(document.getElementById('spendChart'), {
+      type: 'bar',
+      data: { labels: weekly.weeks, datasets: datasets },
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { stacked: true, grid: { display: false } },
+                   y: { stacked: true, grid: { color: 'rgba(0,0,0,0.04)' } } } }
+    });
+  }
+}
+
+async function initSpend() {
+  var barsEl = document.getElementById('spend-bars');
+  showLoading(barsEl);
+  try {
+    var data = await apiGet('/spend?range=' + encodeURIComponent(getRangeFilter()));
+    cachedSpend = data;
+    var total = data.channels.reduce(function(a, c) { return a + c.spend; }, 0);
+    renderSpendKPIs(data.channels);
+    renderSpendBars(data.channels, total);
+    renderROIList(data.channels);
+    upsertSpendChart(data.weekly_breakdown);
+    if (data.advice) renderSpendAdvice(data.advice);
+  } catch (e) {
+    showError(barsEl, e.message);
+  }
+}
+
+/* ============================================================
+   PAGE 4: 线索分发
+   API: GET /api/dashboard/lawyers  (分发规则为静态配置)
+   ============================================================ */
+var distribCharts = {};
+
+function renderRules() {
+  var rules = [
+    { cond: 'FRM总分 ≥ 72 且 定级 = A', target: '高级合伙人（张律师/李律师）', sla: '2小时内', color: COLORS.A },
+    { cond: 'FRM总分 45-71 且 定级 = B', target: '资深律师（王律师）', sla: '24小时内', color: COLORS.B },
+    { cond: 'FRM总分 < 45 或 触发排除规则', target: '初级律师（见习）', sla: '48小时/放弃', color: COLORS.C },
+    { cond: '案值 ≥ 200万（任意定级）', target: '主任律师直接接管', sla: '立即', color: COLORS.purple },
+    { cond: '标的 < 10万 且 定级 C', target: '自动发送FAQ模板，不分配', sla: '自动回复', color: COLORS.gray }
+  ];
+  document.getElementById('rules-list').innerHTML = rules.map(function(r) {
+    return '<div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)">' +
+      '<div style="width:3px;min-height:36px;border-radius:2px;background:' + r.color + ';flex-shrink:0;margin-top:2px"></div>' +
+      '<div style="flex:1">' +
+        '<div class="t-strong" style="margin-bottom:2px">' + r.cond + '</div>' +
+        '<div class="t-muted-sm">→ ' + r.target + ' &nbsp;|&nbsp; SLA: ' + r.sla + '</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function renderLawyerLoad(lawyers) {
+  document.getElementById('lawyer-load').innerHTML = lawyers.map(function(l) {
+    var pct = Math.round(l.load / l.capacity * 100);
+    var col = pct >= 90 ? COLORS.C : pct >= 60 ? COLORS.B : COLORS.A;
+    return '<div style="margin-bottom:10px">' +
+      '<div style="display:flex;justify-content:space-between;margin-bottom:3px">' +
+        '<span class="t-strong">' + escapeHTML(l.name) + '</span>' +
+        '<span class="t-muted">' + l.load + '/' + l.capacity + ' 条 &nbsp; 成单率 ' + l.follow_rate + '%</span>' +
+      '</div>' +
+      '<div class="progress-bg"><div class="progress-fill" style="width:' + pct + '%;background:' + col + '"></div></div>' +
+    '</div>';
+  }).join('');
+}
+
+function upsertFollowChart(lawyers) {
+  var labels = lawyers.map(function(l) { return l.name; });
+  var rates = lawyers.map(function(l) { return l.follow_rate; });
+  var deals = lawyers.map(function(l) { return l.deals * 10; });
+  if (distribCharts.follow) {
+    distribCharts.follow.data.labels = labels;
+    distribCharts.follow.data.datasets[0].data = rates;
+    distribCharts.follow.data.datasets[1].data = deals;
+    distribCharts.follow.update();
+  } else {
+    distribCharts.follow = new Chart(document.getElementById('followChart'), {
+      type: 'bar',
+      data: { labels: labels, datasets: [
+        { label: '跟进率', data: rates, backgroundColor: 'rgba(55,138,221,0.7)', borderRadius: 2 },
+        { label: '成单数', data: deals, backgroundColor: 'rgba(59,109,17,0.6)', borderRadius: 2 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { grid: { display: false } },
+                   y: { max: 100, grid: { color: 'rgba(0,0,0,0.04)' } } } }
+    });
+  }
+}
+
+async function initDistrib() {
+  renderRules();
+  var loadEl = document.getElementById('lawyer-load');
+  showLoading(loadEl);
+  try {
+    var data = await apiGet('/lawyers');
+    renderLawyerLoad(data.lawyers);
+    upsertFollowChart(data.lawyers);
+  } catch (e) {
+    showError(loadEl, e.message);
+  }
+}
+
+/* ============================================================
+   PAGE 5: AI 策略建议
+   API: GET /api/dashboard/weekly-report   (周报摘要)
+        POST /api/ai/ask                   (用户提问)
+   ============================================================ */
+
+/* ---- AI suggest buttons (event delegation) ---- */
+document.getElementById('ai-suggest-btns').addEventListener('click', function(e) {
+  var btn = e.target.closest('.suggest-btn');
+  if (!btn || !btn.dataset.question) return;
+  askAI(btn.dataset.question);
+});
+
+document.getElementById('ai-send-btn').addEventListener('click', askAICustom);
+document.getElementById('ai-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') askAICustom();
+});
+
+function askAI(question) {
+  document.getElementById('ai-input').value = question;
+  runAIQuery(question);
+}
+
+function askAICustom() {
+  var q = document.getElementById('ai-input').value.trim();
+  if (!q) return;
+  runAIQuery(q);
+}
+
+var cachedOverview = null;
+var cachedSpend = null;
+
+function buildAIContext() {
+  var parts = ['你是法律律所的数据策略顾问。当前看板数据摘要：'];
+
+  if (cachedOverview) {
+    var k = cachedOverview.kpis;
+    var g = cachedOverview.grade_distribution;
+    parts.push('- 总线索' + k.total_leads + '条，A级' + k.a_ratio + '%，B级' + (g.B || 0) + '%，C级' + (g.C || 0) + '%');
+    parts.push('- 转化率' + k.conversion_rate + '%，合同额¥' + k.revenue.toLocaleString() + '，CPL ¥' + k.cpl + '，ROI ' + k.roi + '%');
+    parts.push('- 漏斗：' + cachedOverview.funnel.map(function(f) { return f.stage + f.count; }).join('→'));
+  }
+
+  if (cachedSpend) {
+    var chText = cachedSpend.channels.map(function(c) {
+      var roi = c.spend > 0 ? Math.round((c.revenue - c.spend) / c.spend * 100) : 0;
+      return c.name + '(ROI ' + roi + '%,CPL ¥' + Math.round(c.spend / Math.max(c.leads, 1)) + ')';
+    }).join('、');
+    parts.push('- 渠道数据：' + chText);
+  }
+
+  parts.push('请用中文给出具体可执行的策略建议，3-4条，每条50字以内，直接给结论不要废话。');
+  return parts.join('\n');
+}
+
+async function runAIQuery(question) {
+  var card = document.getElementById('ai-answer-card');
+  var box = document.getElementById('ai-answer');
+  card.style.display = 'block';
+  box.innerHTML = '<div class="loading-placeholder"><i class="ti ti-loader" style="font-size:16px"></i> AI 正在分析数据...</div>';
+
+  try {
+    var resp = await fetch(AI_PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: question, context: buildAIContext() })
+    });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    var data = await resp.json();
+    var text = data.content.map(function(i) { return i.text || ''; }).join('');
+    var lines = text.split('\n').filter(function(l) { return l.trim(); });
+    box.innerHTML = lines.map(function(l, i) {
+      return '<div class="ai-item"><span class="ai-num">' + (i + 1) + '.</span><span>' + escapeHTML(l.replace(/^[\d\.\-\*\•]+\s*/, '')) + '</span></div>';
+    }).join('');
+  } catch (e) {
+    box.innerHTML = '<div class="error-placeholder">请求失败，请重试：' + escapeHTML(e.message) + '</div>';
+  }
+}
+
+async function loadWeeklyReport() {
+  var el = document.getElementById('weekly-report');
+  showLoading(el);
+  try {
+    var data = await apiGet('/weekly-report');
+    el.innerHTML = data.items.map(function(item) {
+      return '<div class="ai-item"><span class="ai-num">' + escapeHTML(item.emoji) + '</span><span><strong>' + escapeHTML(item.title) + '</strong>：' + escapeHTML(item.content) + '</span></div>';
+    }).join('');
+  } catch (e) {
+    el.innerHTML = '<div class="ai-item"><span class="ai-num">📊</span><span>本周报告生成中，请稍后刷新或向 AI 提问获取实时分析</span></div>';
+  }
+}
+
+function initAIPage() { loadWeeklyReport(); }
+
+/* ---- boot ---- */
+initOverview();
+</script>
+</body>
+</html>
