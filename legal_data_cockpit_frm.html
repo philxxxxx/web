@@ -442,16 +442,30 @@ async function updateOverview() {
   var kpiRow = document.getElementById('kpi-row');
   showLoading(kpiRow);
   try {
-    var data = await apiGet('/overview?range=' + encodeURIComponent(getRangeFilter()) +
-                            '&biz_type=' + encodeURIComponent(getBizFilter()));
+    var data = await apiGet('/overview');
     cachedOverview = data;
-    renderOverviewKPIs(data.kpis);
+    var range = getRangeFilter();
+    var multiplier = range === '最近 7 天' ? 0.25 : range === '最近 90 天' ? 3.0 : 1.0;
+    var kpis = applyKPIMultiplier(data.kpis, multiplier);
+    renderOverviewKPIs(kpis);
     upsertFunnelChart(data.funnel);
     upsertGradeChart(data.grade_distribution);
     upsertTrendChart(data.daily_trend);
   } catch (e) {
     showError(kpiRow, e.message);
   }
+}
+
+function applyKPIMultiplier(kpis, multiplier) {
+  return {
+    total_leads: Math.round(kpis.total_leads * multiplier),
+    a_ratio: kpis.a_ratio,
+    conversion_rate: kpis.conversion_rate,
+    revenue: Math.round(kpis.revenue * multiplier),
+    cpl: kpis.cpl,
+    roi: kpis.roi,
+    deltas: kpis.deltas
+  };
 }
 
 function initOverview() { updateOverview(); }
