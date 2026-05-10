@@ -446,36 +446,36 @@ async function updateOverview() {
     cachedOverview = data;
     var range = getRangeFilter();
     var biz = getBizFilter();
-    var rangeMult = range === '最近 7 天' ? 0.25 : range === '最近 90 天' ? 3.0 : 1.0;
-    var kpis;
+    var kpis, funnel, gradeDist, trend;
     if (biz === '全部业务') {
-      kpis = {
-        total_leads: Math.round(data.kpis.total_leads * rangeMult),
-        a_ratio: data.kpis.a_ratio,
-        conversion_rate: data.kpis.conversion_rate,
-        revenue: Math.round(data.kpis.revenue * rangeMult),
-        cpl: data.kpis.cpl,
-        roi: data.kpis.roi,
-        deltas: data.kpis.deltas
-      };
+      var rangeData = data.by_range && data.by_range[range];
+      if (rangeData) {
+        kpis = rangeData;
+        funnel = rangeData.funnel;
+        gradeDist = rangeData.grade_distribution;
+        trend = rangeData.daily_trend;
+      } else {
+        kpis = data.kpis;
+        funnel = data.funnel;
+        gradeDist = data.grade_distribution;
+        trend = data.daily_trend;
+      }
     } else if (data.by_biz_type && data.by_biz_type[biz]) {
       var bizData = data.by_biz_type[biz];
-      kpis = {
-        total_leads: Math.round(bizData.total_leads * rangeMult),
-        a_ratio: bizData.a_ratio,
-        conversion_rate: bizData.conversion_rate,
-        revenue: Math.round(bizData.revenue * rangeMult),
-        cpl: bizData.cpl,
-        roi: bizData.roi,
-        deltas: data.kpis.deltas
-      };
+      kpis = bizData;
+      funnel = bizData.funnel;
+      gradeDist = bizData.grade_distribution;
+      trend = bizData.daily_trend;
     } else {
       kpis = data.kpis;
+      funnel = data.funnel;
+      gradeDist = data.grade_distribution;
+      trend = data.daily_trend;
     }
     renderOverviewKPIs(kpis);
-    upsertFunnelChart(data.funnel);
-    upsertGradeChart(data.grade_distribution);
-    upsertTrendChart(data.daily_trend);
+    upsertFunnelChart(funnel);
+    upsertGradeChart(gradeDist);
+    upsertTrendChart(trend);
   } catch (e) {
     showError(kpiRow, e.message);
   }

@@ -17,14 +17,216 @@
       "roi": 8.7
     }
   },
+  "by_range": {
+    "最近 7 天": {
+      "total_leads": 312,
+      "a_ratio": 25.0,
+      "conversion_rate": 7.1,
+      "revenue": 1019050,
+      "cpl": 78,
+      "roi": 135.5,
+      "funnel": [
+        {"stage": "线索获取", "count": 312},
+        {"stage": "初筛通过", "count": 214},
+        {"stage": "律师跟进", "count": 86},
+        {"stage": "签约成交", "count": 22}
+      ],
+      "grade_distribution": {"A": 78, "B": 117, "C": 117},
+      "daily_trend": [
+        {"day": "05-01", "leads": 42, "deals": 3},
+        {"day": "05-02", "leads": 45, "deals": 3},
+        {"day": "05-03", "leads": 38, "deals": 3},
+        {"day": "05-04", "leads": 51, "deals": 4},
+        {"day": "05-05", "leads": 44, "deals": 3},
+        {"day": "05-06", "leads": 54, "deals": 4},
+        {"day": "05-07", "leads": 38, "deals": 2}
+      ]
+    },
+    "最近 30 天": {
+      "total_leads": 1247,
+      "a_ratio": 25.0,
+      "conversion_rate": 7.1,
+      "revenue": 4076200,
+      "cpl": 78,
+      "roi": 135.5,
+      "funnel": [
+        {"stage": "线索获取", "count": 1247},
+        {"stage": "初筛通过", "count": 856},
+        {"stage": "律师跟进", "count": 342},
+        {"stage": "签约成交", "count": 89}
+      ],
+      "grade_distribution": {"A": 312, "B": 468, "C": 467},
+      "daily_trend": [
+        {"day": "05-01", "leads": 156, "deals": 8},
+        {"day": "05-02", "leads": 189, "deals": 12},
+        {"day": "05-03", "leads": 142, "deals": 9},
+        {"day": "05-04", "leads": 203, "deals": 15},
+        {"day": "05-05", "leads": 178, "deals": 11},
+        {"day": "05-06", "leads": 215, "deals": 18},
+        {"day": "05-07", "leads": 164, "deals": 16}
+      ]
+    },
+    "最近 90 天": {
+      "total_leads": 3741,
+      "a_ratio": 25.0,
+      "conversion_rate": 7.1,
+      "revenue": 12228600,
+      "cpl": 78,
+      "roi": 135.5,
+      "funnel": [
+        {"stage": "线索获取", "count": 3741},
+        {"stage": "初筛通过", "count": 2568},
+        {"stage": "律师跟进", "count": 1026},
+        {"stage": "签约成交", "count": 267}
+      ],
+      "grade_distribution": {"A": 936, "B": 1404, "C": 1401},
+      "daily_trend": [
+        {"day": "03-08", "leads": 145, "deals": 8},
+        {"day": "03-15", "leads": 168, "deals": 10},
+        {"day": "03-22", "leads": 152, "deals": 9},
+        {"day": "03-29", "leads": 178, "deals": 12},
+        {"day": "04-05", "leads": 195, "deals": 14},
+        {"day": "04-12", "leads": 187, "deals": 13},
+        {"day": "04-19", "leads": 210, "deals": 16},
+        {"day": "04-26", "leads": 203, "deals": 15},
+        {"day": "05-03", "leads": 156, "deals": 9}
+      ]
+    }
+  },
   "by_biz_type": {
-    "婚姻家事": { "total_leads": 349, "total_deals": 25, "conversion_rate": 7.2, "a_ratio": 28.5, "revenue": 1142100, "cpl": 75, "roi": 138.2 },
-    "劳动纠纷": { "total_leads": 274, "total_deals": 19, "conversion_rate": 6.9, "a_ratio": 22.3, "revenue": 896600, "cpl": 82, "roi": 128.5 },
-    "合同纠纷": { "total_leads": 312, "total_deals": 22, "conversion_rate": 7.1, "a_ratio": 25.8, "revenue": 1019050, "cpl": 77, "roi": 135.0 },
-    "债务追偿": { "total_leads": 249, "total_deals": 18, "conversion_rate": 7.2, "a_ratio": 24.9, "revenue": 814450, "cpl": 73, "roi": 142.3 },
-    "房产纠纷": { "total_leads": 35, "total_deals": 3, "conversion_rate": 8.6, "a_ratio": 31.4, "revenue": 148000, "cpl": 68, "roi": 155.0 },
-    "股权纠纷": { "total_leads": 18, "total_deals": 1, "conversion_rate": 5.6, "a_ratio": 33.3, "revenue": 95000, "cpl": 85, "roi": 118.0 },
-    "知识产权": { "total_leads": 10, "total_deals": 1, "conversion_rate": 10.0, "a_ratio": 30.0, "revenue": 50000, "cpl": 60, "roi": 165.0 }
+    "婚姻家事": {
+      "total_leads": 349, "total_deals": 25, "conversion_rate": 7.2, "a_ratio": 28.5, "revenue": 1142100, "cpl": 75, "roi": 138.2,
+      "funnel": [
+        {"stage": "线索获取", "count": 349},
+        {"stage": "初筛通过", "count": 245},
+        {"stage": "律师跟进", "count": 98},
+        {"stage": "签约成交", "count": 25}
+      ],
+      "grade_distribution": {"A": 99, "B": 140, "C": 110},
+      "daily_trend": [
+        {"day": "05-01", "leads": 42, "deals": 3},
+        {"day": "05-02", "leads": 48, "deals": 3},
+        {"day": "05-03", "leads": 38, "deals": 3},
+        {"day": "05-04", "leads": 55, "deals": 4},
+        {"day": "05-05", "leads": 45, "deals": 3},
+        {"day": "05-06", "leads": 58, "deals": 5},
+        {"day": "05-07", "leads": 63, "deals": 4}
+      ]
+    },
+    "劳动纠纷": {
+      "total_leads": 274, "total_deals": 19, "conversion_rate": 6.9, "a_ratio": 22.3, "revenue": 896600, "cpl": 82, "roi": 128.5,
+      "funnel": [
+        {"stage": "线索获取", "count": 274},
+        {"stage": "初筛通过", "count": 189},
+        {"stage": "律师跟进", "count": 74},
+        {"stage": "签约成交", "count": 19}
+      ],
+      "grade_distribution": {"A": 61, "B": 107, "C": 106},
+      "daily_trend": [
+        {"day": "05-01", "leads": 35, "deals": 2},
+        {"day": "05-02", "leads": 38, "deals": 3},
+        {"day": "05-03", "leads": 32, "deals": 2},
+        {"day": "05-04", "leads": 42, "deals": 3},
+        {"day": "05-05", "leads": 36, "deals": 3},
+        {"day": "05-06", "leads": 48, "deals": 4},
+        {"day": "05-07", "leads": 43, "deals": 2}
+      ]
+    },
+    "合同纠纷": {
+      "total_leads": 312, "total_deals": 22, "conversion_rate": 7.1, "a_ratio": 25.8, "revenue": 1019050, "cpl": 77, "roi": 135.0,
+      "funnel": [
+        {"stage": "线索获取", "count": 312},
+        {"stage": "初筛通过", "count": 218},
+        {"stage": "律师跟进", "count": 87},
+        {"stage": "签约成交", "count": 22}
+      ],
+      "grade_distribution": {"A": 81, "B": 124, "C": 107},
+      "daily_trend": [
+        {"day": "05-01", "leads": 38, "deals": 3},
+        {"day": "05-02", "leads": 42, "deals": 3},
+        {"day": "05-03", "leads": 35, "deals": 2},
+        {"day": "05-04", "leads": 48, "deals": 4},
+        {"day": "05-05", "leads": 42, "deals": 3},
+        {"day": "05-06", "leads": 52, "deals": 4},
+        {"day": "05-07", "leads": 55, "deals": 3}
+      ]
+    },
+    "债务追偿": {
+      "total_leads": 249, "total_deals": 18, "conversion_rate": 7.2, "a_ratio": 24.9, "revenue": 814450, "cpl": 73, "roi": 142.3,
+      "funnel": [
+        {"stage": "线索获取", "count": 249},
+        {"stage": "初筛通过", "count": 174},
+        {"stage": "律师跟进", "count": 69},
+        {"stage": "签约成交", "count": 18}
+      ],
+      "grade_distribution": {"A": 62, "B": 98, "C": 89},
+      "daily_trend": [
+        {"day": "05-01", "leads": 30, "deals": 2},
+        {"day": "05-02", "leads": 35, "deals": 3},
+        {"day": "05-03", "leads": 28, "deals": 2},
+        {"day": "05-04", "leads": 38, "deals": 3},
+        {"day": "05-05", "leads": 32, "deals": 2},
+        {"day": "05-06", "leads": 42, "deals": 4},
+        {"day": "05-07", "leads": 44, "deals": 2}
+      ]
+    },
+    "房产纠纷": {
+      "total_leads": 35, "total_deals": 3, "conversion_rate": 8.6, "a_ratio": 31.4, "revenue": 148000, "cpl": 68, "roi": 155.0,
+      "funnel": [
+        {"stage": "线索获取", "count": 35},
+        {"stage": "初筛通过", "count": 26},
+        {"stage": "律师跟进", "count": 12},
+        {"stage": "签约成交", "count": 3}
+      ],
+      "grade_distribution": {"A": 11, "B": 13, "C": 11},
+      "daily_trend": [
+        {"day": "05-01", "leads": 5, "deals": 0},
+        {"day": "05-02", "leads": 6, "deals": 0},
+        {"day": "05-03", "leads": 4, "deals": 1},
+        {"day": "05-04", "leads": 5, "deals": 0},
+        {"day": "05-05", "leads": 5, "deals": 1},
+        {"day": "05-06", "leads": 5, "deals": 0},
+        {"day": "05-07", "leads": 5, "deals": 1}
+      ]
+    },
+    "股权纠纷": {
+      "total_leads": 18, "total_deals": 1, "conversion_rate": 5.6, "a_ratio": 33.3, "revenue": 95000, "cpl": 85, "roi": 118.0,
+      "funnel": [
+        {"stage": "线索获取", "count": 18},
+        {"stage": "初筛通过", "count": 12},
+        {"stage": "律师跟进", "count": 4},
+        {"stage": "签约成交", "count": 1}
+      ],
+      "grade_distribution": {"A": 6, "B": 7, "C": 5},
+      "daily_trend": [
+        {"day": "05-01", "leads": 2, "deals": 0},
+        {"day": "05-02", "leads": 3, "deals": 0},
+        {"day": "05-03", "leads": 2, "deals": 0},
+        {"day": "05-04", "leads": 3, "deals": 0},
+        {"day": "05-05", "leads": 3, "deals": 0},
+        {"day": "05-06", "leads": 2, "deals": 1},
+        {"day": "05-07", "leads": 3, "deals": 0}
+      ]
+    },
+    "知识产权": {
+      "total_leads": 10, "total_deals": 1, "conversion_rate": 10.0, "a_ratio": 30.0, "revenue": 50000, "cpl": 60, "roi": 165.0,
+      "funnel": [
+        {"stage": "线索获取", "count": 10},
+        {"stage": "初筛通过", "count": 8},
+        {"stage": "律师跟进", "count": 4},
+        {"stage": "签约成交", "count": 1}
+      ],
+      "grade_distribution": {"A": 3, "B": 4, "C": 3},
+      "daily_trend": [
+        {"day": "05-01", "leads": 1, "deals": 0},
+        {"day": "05-02", "leads": 2, "deals": 0},
+        {"day": "05-03", "leads": 1, "deals": 0},
+        {"day": "05-04", "leads": 2, "deals": 0},
+        {"day": "05-05", "leads": 1, "deals": 0},
+        {"day": "05-06", "leads": 2, "deals": 1},
+        {"day": "05-07", "leads": 1, "deals": 0}
+      ]
+    }
   },
   "funnel": [
     {"stage": "线索获取", "count": 1247},
