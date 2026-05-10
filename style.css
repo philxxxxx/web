@@ -463,8 +463,8 @@ body {
 .hero-project-card img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    background: var(--bg-secondary);
+    object-fit: cover;
+    object-position: top center;
 }
 
 .hero-project-info {
@@ -473,7 +473,7 @@ body {
     left: 0;
     right: 0;
     padding: 20px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 50%, transparent);
 }
 
 .hero-project-info .project-category {
@@ -490,7 +490,8 @@ body {
 .hero-project-info h3 {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 @media (max-width: 1024px) {
