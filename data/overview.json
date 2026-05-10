@@ -17,6 +17,15 @@
       "roi": 8.7
     }
   },
+  "by_biz_type": {
+    "婚姻家事": { "total_leads": 349, "total_deals": 25, "conversion_rate": 7.2, "a_ratio": 28.5, "revenue": 1142100, "cpl": 75, "roi": 138.2 },
+    "劳动纠纷": { "total_leads": 274, "total_deals": 19, "conversion_rate": 6.9, "a_ratio": 22.3, "revenue": 896600, "cpl": 82, "roi": 128.5 },
+    "合同纠纷": { "total_leads": 312, "total_deals": 22, "conversion_rate": 7.1, "a_ratio": 25.8, "revenue": 1019050, "cpl": 77, "roi": 135.0 },
+    "债务追偿": { "total_leads": 249, "total_deals": 18, "conversion_rate": 7.2, "a_ratio": 24.9, "revenue": 814450, "cpl": 73, "roi": 142.3 },
+    "房产纠纷": { "total_leads": 35, "total_deals": 3, "conversion_rate": 8.6, "a_ratio": 31.4, "revenue": 148000, "cpl": 68, "roi": 155.0 },
+    "股权纠纷": { "total_leads": 18, "total_deals": 1, "conversion_rate": 5.6, "a_ratio": 33.3, "revenue": 95000, "cpl": 85, "roi": 118.0 },
+    "知识产权": { "total_leads": 10, "total_deals": 1, "conversion_rate": 10.0, "a_ratio": 30.0, "revenue": 50000, "cpl": 60, "roi": 165.0 }
+  },
   "funnel": [
     {"stage": "线索获取", "count": 1247},
     {"stage": "初筛通过", "count": 856},
