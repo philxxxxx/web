@@ -444,17 +444,27 @@ async function updateOverview() {
   try {
     var data = await apiGet('/overview');
     cachedOverview = data;
+    var range = getRangeFilter();
     var biz = getBizFilter();
+    var rangeMult = range === '最近 7 天' ? 0.25 : range === '最近 90 天' ? 3.0 : 1.0;
     var kpis;
     if (biz === '全部业务') {
-      kpis = data.kpis;
+      kpis = {
+        total_leads: Math.round(data.kpis.total_leads * rangeMult),
+        a_ratio: data.kpis.a_ratio,
+        conversion_rate: data.kpis.conversion_rate,
+        revenue: Math.round(data.kpis.revenue * rangeMult),
+        cpl: data.kpis.cpl,
+        roi: data.kpis.roi,
+        deltas: data.kpis.deltas
+      };
     } else if (data.by_biz_type && data.by_biz_type[biz]) {
       var bizData = data.by_biz_type[biz];
       kpis = {
-        total_leads: bizData.total_leads,
+        total_leads: Math.round(bizData.total_leads * rangeMult),
         a_ratio: bizData.a_ratio,
         conversion_rate: bizData.conversion_rate,
-        revenue: bizData.revenue,
+        revenue: Math.round(bizData.revenue * rangeMult),
         cpl: bizData.cpl,
         roi: bizData.roi,
         deltas: data.kpis.deltas
