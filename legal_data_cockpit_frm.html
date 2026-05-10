@@ -312,6 +312,22 @@ async function apiGet(path) {
   return resp.json();
 }
 
+function getRangeFilter() {
+  var sel = document.getElementById('date-range');
+  return sel ? sel.value : '最近 30 天';
+}
+
+function getBizFilter() {
+  var sel = document.getElementById('biz-type');
+  return sel ? sel.value : '全部业务';
+}
+
+/* ============================================================
+   PAGE 1: 全链路概览
+   API: GET /api/dashboard/overview?range=&biz_type=
+   ============================================================ */
+var overviewCharts = {};
+
 /* ---- page navigation (event delegation) ---- */
 document.querySelector('.top-nav').addEventListener('click', function(e) {
   var btn = e.target.closest('.nav-btn');
@@ -333,23 +349,6 @@ function showPage(id) {
   if (id === 'distrib') initDistrib();
   if (id === 'ai') initAIPage();
 }
-
-/* ---- shared filter helpers ---- */
-function getRangeFilter() {
-  var sel = document.getElementById('date-range');
-  return sel ? sel.value : '最近 30 天';
-}
-
-function getBizFilter() {
-  var sel = document.getElementById('biz-type');
-  return sel ? sel.value : '全部业务';
-}
-
-/* ============================================================
-   PAGE 1: 全链路概览
-   API: GET /api/dashboard/overview?range=&biz_type=
-   ============================================================ */
-var overviewCharts = {};
 
 function deltaText(delta, suffix) {
   if (delta == null) return '';
@@ -827,23 +826,6 @@ function initAIPage() { loadWeeklyReport(); }
 
 /* ---- boot ---- */
 initOverview();
-
-/* ---- filter change listeners ---- */
-document.getElementById('date-range')?.addEventListener('change', function() {
-  var activePage = document.querySelector('.page.act');
-  if (activePage) {
-    var pageId = activePage.id.replace('p-', '');
-    showPage(pageId);
-  }
-});
-
-document.getElementById('biz-type')?.addEventListener('change', function() {
-  var activePage = document.querySelector('.page.act');
-  if (activePage) {
-    var pageId = activePage.id.replace('p-', '');
-    showPage(pageId);
-  }
-});
 </script>
 </body>
 </html>

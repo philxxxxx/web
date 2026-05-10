@@ -1,19 +1,17 @@
 {
   "channels": [
-    { "name": "百度搜索", "spend": 12500, "leads": 423, "deals": 35, "revenue": 15750, "roi": 1.26, "color": "#378ADD" },
-    { "name": "抖音信息流", "spend": 9800, "leads": 356, "deals": 28, "revenue": 12544, "roi": 1.28, "color": "#D85A30" },
-    { "name": "微信朋友圈", "spend": 7200, "leads": 287, "deals": 22, "revenue": 9720, "roi": 1.35, "color": "#1D9E75" },
-    { "name": "知乎广告", "spend": 4500, "leads": 181, "deals": 15, "revenue": 6390, "roi": 1.42, "color": "#7F77DD" },
-    { "name": "自然流量", "spend": 0, "leads": 286, "deals": 19, "revenue": 8550, "roi": "∞", "color": "#888780" }
+    { "name": "百度搜索", "spend": 12500, "leads": 423, "deals": 35, "revenue": 382500, "roi": 1.26, "color": "#378ADD" },
+    { "name": "抖音信息流", "spend": 9800, "leads": 356, "deals": 28, "revenue": 313600, "roi": 1.28, "color": "#D85A30" },
+    { "name": "微信朋友圈", "spend": 7200, "leads": 287, "deals": 22, "revenue": 249600, "roi": 1.35, "color": "#1D9E75" },
+    { "name": "知乎广告", "spend": 4500, "leads": 181, "deals": 15, "revenue": 165000, "roi": 1.42, "color": "#7F77DD" },
+    { "name": "自然流量", "spend": 0, "leads": 286, "deals": 19, "revenue": 209000, "roi": "∞", "color": "#888780" }
   ],
   "weekly_breakdown": {
     "weeks": ["W18", "W19", "W20", "W21"],
-    "channels": {
-      "百度搜索": [2800, 3200, 3500, 3000],
-      "抖音信息流": [2200, 2600, 2500, 2500],
-      "微信朋友圈": [1800, 1600, 1900, 1900],
-      "知乎广告": [1100, 1200, 1100, 1100]
-    }
+    "百度搜索": [2800, 3200, 3500, 3000],
+    "抖音信息流": [2200, 2600, 2500, 2500],
+    "微信朋友圈": [1800, 1600, 1900, 1900],
+    "知乎广告": [1100, 1200, 1100, 1100]
   },
   "advice": [
     { "title": "增加抖音预算", "content": "抖音信息流ROI达128%且呈上升趋势，建议增加10-15%预算" },

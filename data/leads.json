@@ -1,19 +1,28 @@
 {
   "leads": [
-    { "id": "LD20260507001", "frm_score": 85, "grade": "A", "case_type": "婚姻家事", "value": 38, "source": "百度搜索", "created_at": "2026-05-07 14:32" },
-    { "id": "LD20260507002", "frm_score": 72, "grade": "B", "case_type": "债务纠纷", "value": 25, "source": "抖音信息流", "created_at": "2026-05-07 13:15" },
-    { "id": "LD20260507003", "frm_score": 91, "grade": "A", "case_type": "房产纠纷", "value": 86, "source": "微信朋友圈", "created_at": "2026-05-07 11:48" },
-    { "id": "LD20260507004", "frm_score": 45, "grade": "C", "case_type": "劳动争议", "value": 8, "source": "自然流量", "created_at": "2026-05-07 10:22" },
-    { "id": "LD20260506001", "frm_score": 68, "grade": "B", "case_type": "合同纠纷", "value": 32, "source": "知乎广告", "created_at": "2026-05-06 16:55" },
-    { "id": "LD20260506002", "frm_score": 88, "grade": "A", "case_type": "股权纠纷", "value": 156, "source": "百度搜索", "created_at": "2026-05-06 15:30" },
-    { "id": "LD20260506003", "frm_score": 55, "grade": "C", "case_type": "知识产权", "value": 15, "source": "知乎广告", "created_at": "2026-05-06 14:20" },
-    { "id": "LD20260505001", "frm_score": 76, "grade": "B", "case_type": "婚姻家事", "value": 42, "source": "微信朋友圈", "created_at": "2026-05-05 17:45" }
+    { "name": "张女士", "type": "婚姻家事", "f": 9, "r": 8, "m": 8, "grade": "A", "action": "立即跟进" },
+    { "name": "李先生", "type": "债务纠纷", "f": 7, "r": 6, "m": 7, "grade": "B", "action": "24h内回访" },
+    { "name": "王女士", "type": "房产纠纷", "f": 10, "r": 9, "m": 10, "grade": "A", "action": "主任对接" },
+    { "name": "赵先生", "type": "劳动争议", "f": 5, "r": 4, "m": 3, "grade": "C", "action": "常规跟进" },
+    { "name": "刘女士", "type": "合同纠纷", "f": 7, "r": 7, "m": 6, "grade": "B", "action": "48h内回访" },
+    { "name": "陈先生", "type": "股权纠纷", "f": 10, "r": 10, "m": 10, "grade": "A", "action": "优先处理" },
+    { "name": "周女士", "type": "知识产权", "f": 5, "r": 5, "m": 4, "grade": "C", "action": "群发跟进" },
+    { "name": "吴先生", "type": "婚姻家事", "f": 8, "r": 7, "m": 8, "grade": "B", "action": "尽快联系" }
   ],
-  "scatter_points": {
-    "A": [{ "x": 85, "y": 38 }, { "x": 91, "y": 86 }, { "x": 88, "y": 156 }, { "x": 82, "y": 55 }],
-    "B": [{ "x": 72, "y": 25 }, { "x": 68, "y": 32 }, { "x": 76, "y": 42 }, { "x": 71, "y": 35 }],
-    "C": [{ "x": 45, "y": 8 }, { "x": 55, "y": 15 }, { "x": 48, "y": 12 }, { "x": 52, "y": 18 }]
-  },
+  "scatter_points": [
+    { "x": 8.5, "y": 3.8, "r": 85, "grade": "A" },
+    { "x": 9.1, "y": 8.6, "r": 91, "grade": "A" },
+    { "x": 8.8, "y": 15.6, "r": 88, "grade": "A" },
+    { "x": 8.2, "y": 5.5, "r": 82, "grade": "A" },
+    { "x": 7.2, "y": 2.5, "r": 72, "grade": "B" },
+    { "x": 6.8, "y": 3.2, "r": 68, "grade": "B" },
+    { "x": 7.6, "y": 4.2, "r": 76, "grade": "B" },
+    { "x": 7.1, "y": 3.5, "r": 71, "grade": "B" },
+    { "x": 4.5, "y": 0.8, "r": 45, "grade": "C" },
+    { "x": 5.5, "y": 1.5, "r": 55, "grade": "C" },
+    { "x": 4.8, "y": 1.2, "r": 48, "grade": "C" },
+    { "x": 5.2, "y": 1.8, "r": 52, "grade": "C" }
+  ],
   "dimension_by_type": {
     "labels": ["婚姻家事", "债务纠纷", "房产纠纷", "劳动争议", "合同纠纷", "股权纠纷"],
     "f_scores": [82, 75, 88, 52, 65, 92],
