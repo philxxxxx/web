@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>律引 CRM - 数据总览</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
   <style>
     :root {
       --color-text-primary: #1a1a1a;
@@ -25,12 +23,12 @@
     .app{display:flex;height:100vh;min-height:640px;background:var(--color-background-tertiary);font-size:14px}
     .sidebar{width:200px;flex-shrink:0;background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;padding:16px 0}
     .logo{padding:0 16px 20px;font-size:15px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:8px}
-    .logo i{font-size:18px;color:#3B6D11}
+    .logo .icon{width:18px;height:18px;color:#3B6D11;font-weight:bold}
     .nav-section{padding:4px 8px;font-size:11px;color:var(--color-text-tertiary);letter-spacing:.04em;margin:8px 0 2px}
     .nav-item{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;color:var(--color-text-secondary);border-radius:0;transition:background .15s;font-size:13px}
     .nav-item:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
     .nav-item.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500;border-left:2px solid #3B6D11}
-    .nav-item i{font-size:16px}
+    .nav-item .icon{width:16px;height:16px;color:inherit}
     .sidebar-bottom{margin-top:auto;padding:12px 16px;border-top:0.5px solid var(--color-border-tertiary)}
     .user-badge{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-text-secondary)}
     .avatar{width:28px;height:28px;border-radius:50%;background:#C0DD97;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#3B6D11;flex-shrink:0}
@@ -42,10 +40,12 @@
     .btn:hover{background:var(--color-background-secondary)}
     .btn-primary{background:#3B6D11;border-color:#3B6D11;color:#EAF3DE}
     .btn-primary:hover{background:#27500A;border-color:#27500A;color:#EAF3DE}
+    .btn .icon{width:14px;height:14px}
     .content{padding:20px 24px;flex:1}
     .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
     .metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px 16px}
     .metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+    .metric-label .icon{width:14px;height:14px}
     .metric-value{font-size:22px;font-weight:500;color:var(--color-text-primary)}
     .metric-sub{font-size:12px;color:var(--color-text-tertiary);margin-top:2px}
     .metric-up{color:#3B6D11}
@@ -105,6 +105,7 @@
     .action-btns{display:flex;gap:4px}
     .icon-btn{width:28px;height:28px;border-radius:6px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-text-secondary)}
     .icon-btn:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+    .icon-btn .icon{width:14px;height:14px}
     .priority-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
     .dot-hot{background:#D85A30}
     .dot-warm{background:#BA7517}
@@ -133,7 +134,7 @@
     .sop-step.active{border-color:#97C459;background:#EAF3DE}
     .sop-step.active .sop-icon{color:#3B6D11}
     .sop-step.pending{color:var(--color-text-tertiary)}
-    .sop-icon{font-size:16px;flex-shrink:0}
+    .sop-icon{width:16px;height:16px;flex-shrink:0}
     .add-note{width:100%;padding:8px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px;resize:none;height:60px;font-family:var(--font-sans)}
     .source-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
     .source-tag{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
@@ -143,257 +144,288 @@
     .src-sem{background:#FAECE7;color:#712B13}
     .empty-hint{text-align:center;padding:40px 20px;color:var(--color-text-tertiary);font-size:13px}
     .role-badge{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;background:#EEEDFE;color:#3C3489}
+    .close-btn{width:28px;height:28px;border-radius:6px;border:none;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-text-secondary)}
+    .close-btn:hover{background:var(--color-background-tertiary)}
+    .icon-users::before{content:'👥'}
+    .icon-refresh::before{content:'🔄'}
+    .icon-check::before{content:'✓'}
+    .icon-wallet::before{content:'💰'}
+    .icon-download::before{content:'↓'}
+    .icon-eye::before{content:'👁'}
+    .icon-phone::before{content:'📞'}
+    .icon-plus::before{content:'+'}
+    .icon-filter::before{content:'🔍'}
+    .icon-calendar::before{content:'📅'}
+    .icon-message::before{content:'💬'}
+    .icon-shuffle::before{content:'🔀'}
+    .icon-chart::before{content:'📊'}
+    .icon-building::before{content:'🏢'}
+    .icon-clock::before{content:'⏱'}
+    .icon-user-plus::before{content:'⊕'}
+    .icon-file::before{content:'📄'}
+    .icon-writing::before{content:'✏'}
+    .icon-scale::before{content:'⚖'}
+    .icon-dashboard::before{content:'📈'}
+    .icon-artboard::before{content:'📋'}
   </style>
 </head>
 <body>
-<div class=\"app\">
-  <div class=\"sidebar\">
-    <div class=\"logo\"><i class=\"ti ti-scale\" aria-hidden=\"true\"></i>律引 CRM</div>
-    <div class=\"nav-section\">工作台</div>
-    <div class=\"nav-item active\" onclick=\"showPage('dashboard')\"><i class=\"ti ti-layout-dashboard\" aria-hidden=\"true\"></i>数据总览</div>
-    <div class=\"nav-item\" onclick=\"showPage('leads')\"><i class=\"ti ti-users\" aria-hidden=\"true\"></i>线索公海池</div>
-    <div class=\"nav-item\" onclick=\"showPage('pipeline')\"><i class=\"ti ti-artboard\" aria-hidden=\"true\"></i>我的跟进</div>
-    <div class=\"nav-section\">管理</div>
-    <div class=\"nav-item\" onclick=\"showPage('assign')\"><i class=\"ti ti-arrows-shuffle\" aria-hidden=\"true\"></i>线索分配</div>
-    <div class=\"nav-item\" onclick=\"showPage('report')\"><i class=\"ti ti-chart-bar\" aria-hidden=\"true\"></i>成单归因</div>
-    <div class=\"nav-item\" onclick=\"showPage('team')\"><i class=\"ti ti-building\" aria-hidden=\"true\"></i>团队管理</div>
-    <div class=\"sidebar-bottom\">
-      <div class=\"user-badge\"><div class=\"avatar\">张</div><div><div style=\"font-size:12px;color:var(--color-text-primary)\">张明 <span class=\"role-badge\">管理员</span></div><div style=\"font-size:11px;color:var(--color-text-tertiary)\">查看所有数据</div></div></div>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo"><span class="icon icon-scale"></span>律引 CRM</div>
+    <div class="nav-section">工作台</div>
+    <div class="nav-item active" onclick="showPage('dashboard')"><span class="icon icon-dashboard"></span>数据总览</div>
+    <div class="nav-item" onclick="showPage('leads')"><span class="icon icon-users"></span>线索公海池</div>
+    <div class="nav-item" onclick="showPage('pipeline')"><span class="icon icon-artboard"></span>我的跟进</div>
+    <div class="nav-section">管理</div>
+    <div class="nav-item" onclick="showPage('assign')"><span class="icon icon-shuffle"></span>线索分配</div>
+    <div class="nav-item" onclick="showPage('report')"><span class="icon icon-chart"></span>成单归因</div>
+    <div class="nav-item" onclick="showPage('team')"><span class="icon icon-building"></span>团队管理</div>
+    <div class="sidebar-bottom">
+      <div class="user-badge"><div class="avatar">张</div><div><div style="font-size:12px;color:var(--color-text-primary)">张明 <span class="role-badge">管理员</span></div><div style="font-size:11px;color:var(--color-text-tertiary)">查看所有数据</div></div></div>
     </div>
   </div>
 
-  <div class=\"main-wrap\">
-    <div id=\"page-dashboard\" class=\"main\">
-      <div class=\"topbar\"><div class=\"topbar-title\">数据总览</div><div class=\"topbar-actions\"><span style=\"font-size:12px;color:var(--color-text-tertiary)\">本月 · 2025年5月</span><button class=\"btn\"><i class=\"ti ti-download\" aria-hidden=\"true\"></i>导出报表</button></div></div>
-      <div class=\"content\">
-        <div class=\"metrics\">
-          <div class=\"metric\"><div class=\"metric-label\"><i class=\"ti ti-users\" style=\"font-size:14px\" aria-hidden=\"true\"></i>本月新增线索</div><div class=\"metric-value\">248</div><div class=\"metric-sub metric-up\">↑ 12% 较上月</div></div>
-          <div class=\"metric\"><div class=\"metric-label\"><i class=\"ti ti-refresh\" style=\"font-size:14px\" aria-hidden=\"true\"></i>线索转化率</div><div class=\"metric-value\">18.5%</div><div class=\"metric-sub metric-up\">↑ 3.2% 较上月</div></div>
-          <div class=\"metric\"><div class=\"metric-label\"><i class=\"ti ti-check-circle\" style=\"font-size:14px\" aria-hidden=\"true\"></i>本月成单</div><div class=\"metric-value\">46</div><div class=\"metric-sub metric-up\">↑ 8 较上月</div></div>
-          <div class=\"metric\"><div class=\"metric-label\"><i class=\"ti ti-wallet\" style=\"font-size:14px\" aria-hidden=\"true\"></i>平均合同额</div><div class=\"metric-value\">¥13,478</div><div class=\"metric-sub metric-up\">↑ 5.2%</div></div>
+  <div class="main-wrap">
+    <div id="page-dashboard" class="main">
+      <div class="topbar"><div class="topbar-title">数据总览</div><div class="topbar-actions"><span style="font-size:12px;color:var(--color-text-tertiary)">本月 · 2025年5月</span><button class="btn"><span class="icon icon-download"></span>导出报表</button></div></div>
+      <div class="content">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label"><span class="icon icon-users"></span>本月新增线索</div><div class="metric-value">248</div><div class="metric-sub metric-up">↑ 12% 较上月</div></div>
+          <div class="metric"><div class="metric-label"><span class="icon icon-refresh"></span>线索转化率</div><div class="metric-value">18.5%</div><div class="metric-sub metric-up">↑ 3.2% 较上月</div></div>
+          <div class="metric"><div class="metric-label"><span class="icon icon-check"></span>本月成单</div><div class="metric-value">46</div><div class="metric-sub metric-up">↑ 8 较上月</div></div>
+          <div class="metric"><div class="metric-label"><span class="icon icon-wallet"></span>平均合同额</div><div class="metric-value">¥13,478</div><div class="metric-sub metric-up">↑ 5.2%</div></div>
         </div>
-        <div class=\"section-row\">
-          <div class=\"panel\">
-            <div class=\"panel-header\"><div class=\"panel-title\">线索漏斗</div><div class=\"panel-link\">查看详情</div></div>
-            <div class=\"funnel-wrap\">
-              <div class=\"funnel-item\"><div class=\"funnel-label\">总线索</div><div class=\"funnel-bar-wrap\"><div class=\"funnel-bar fb-blue\" style=\"width:100%\">248</div></div><div class=\"funnel-count\">248</div></div>
-              <div class=\"funnel-item\"><div class=\"funnel-label\">已联系</div><div class=\"funnel-bar-wrap\"><div class=\"funnel-bar fb-amber\" style=\"width:72%\">179</div></div><div class=\"funnel-count\">179</div></div>
-              <div class=\"funnel-item\"><div class=\"funnel-label\">面谈中</div><div class=\"funnel-bar-wrap\"><div class=\"funnel-bar fb-purple\" style=\"width:45%\">112</div></div><div class=\"funnel-count\">112</div></div>
-              <div class=\"funnel-item\"><div class=\"funnel-label\">报价中</div><div class=\"funnel-bar-wrap\"><div class=\"funnel-bar fb-coral\" style=\"width:28%\">70</div></div><div class=\"funnel-count\">70</div></div>
-              <div class=\"funnel-item\"><div class=\"funnel-label\">已成交</div><div class=\"funnel-bar-wrap\"><div class=\"funnel-bar fb-green\" style=\"width:18.5%\">46</div></div><div class=\"funnel-count\">46</div></div>
+        <div class="section-row">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">线索漏斗</div><div class="panel-link">查看详情</div></div>
+            <div class="funnel-wrap">
+              <div class="funnel-item"><div class="funnel-label">总线索</div><div class="funnel-bar-wrap"><div class="funnel-bar fb-blue" style="width:100%">248</div></div><div class="funnel-count">248</div></div>
+              <div class="funnel-item"><div class="funnel-label">已联系</div><div class="funnel-bar-wrap"><div class="funnel-bar fb-amber" style="width:72%">179</div></div><div class="funnel-count">179</div></div>
+              <div class="funnel-item"><div class="funnel-label">面谈中</div><div class="funnel-bar-wrap"><div class="funnel-bar fb-purple" style="width:45%">112</div></div><div class="funnel-count">112</div></div>
+              <div class="funnel-item"><div class="funnel-label">报价中</div><div class="funnel-bar-wrap"><div class="funnel-bar fb-coral" style="width:28%">70</div></div><div class="funnel-count">70</div></div>
+              <div class="funnel-item"><div class="funnel-label">已成交</div><div class="funnel-bar-wrap"><div class="funnel-bar fb-green" style="width:18.5%">46</div></div><div class="funnel-count">46</div></div>
             </div>
           </div>
-          <div class=\"panel\">
-            <div class=\"panel-header\"><div class=\"panel-title\">线索来源</div></div>
-            <div class=\"source-bar\">
-              <span class=\"source-tag src-wx\">微信引流 35%</span>
-              <span class=\"source-tag src-tb\">百度搜索 28%</span>
-              <span class=\"source-tag src-ref\">客户推荐 22%</span>
-              <span class=\"source-tag src-sem\">抖音信息流 15%</span>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">线索来源</div></div>
+            <div class="source-bar">
+              <span class="source-tag src-wx">微信引流 35%</span>
+              <span class="source-tag src-tb">百度搜索 28%</span>
+              <span class="source-tag src-ref">客户推荐 22%</span>
+              <span class="source-tag src-sem">抖音信息流 15%</span>
             </div>
-            <div style=\"margin-top:12px;\">
-              <div style=\"display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px\"><span style=\"color:var(--color-text-secondary)\">本周新增</span><span style=\"color:var(--color-text-primary);font-weight:500\">+42</span></div>
-              <div style=\"display:flex;justify-content:space-between;font-size:12px\"><span style=\"color:var(--color-text-secondary)\">待分配</span><span style=\"color:#D85A30;font-weight:500\">12</span></div>
+            <div style="margin-top:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span style="color:var(--color-text-secondary)">本周新增</span><span style="color:var(--color-text-primary);font-weight:500">+42</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--color-text-secondary)">待分配</span><span style="color:#D85A30;font-weight:500">12</span></div>
             </div>
           </div>
         </div>
-        <div class=\"full-panel\">
-          <div class=\"panel-header\"><div class=\"panel-title\">最新线索</div><button class=\"btn btn-primary\"><i class=\"ti ti-plus\" aria-hidden=\"true\"></i>新增线索</button></div>
-          <table class=\"table\">
-            <thead><tr><th>线索</th><th>来源</th><th>状态</th><th>意向度</th><th>创建时间</th><th>操作</th></tr></thead>
+        <div class="full-panel">
+          <div class="panel-header"><div class="panel-title">最新线索</div><button class="btn btn-primary"><span class="icon icon-plus"></span>新增线索</button></div>
+          <table class="table">
+            <thead><tr><th>客户信息</th><th>来源</th><th>阶段</th><th>意向</th><th>时间</th><th>操作</th></tr></thead>
             <tbody>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-blue\">王</div><div><div style=\"font-weight:500\">王建国</div><div style=\"font-size:11px;color:var(--color-text-tertiary)\">离婚财产纠纷</div></div></div></td><td><span class=\"source-tag src-wx\">微信</span></td><td><span class=\"stage-badge stage-contact\">首次联系</span></td><td><span class=\"tag tag-hot\">高意向</span></td><td>今天 09:12</td><td><div class=\"action-btns\"><button class=\"icon-btn\" onclick=\"openDetail('王建国')\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-phone\" aria-hidden=\"true\"></i></button></div></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-purple\">李</div><div><div style=\"font-weight:500\">李婷婷</div><div style=\"font-size:11px;color:var(--color-text-tertiary)\">劳动纠纷</div></div></div></td><td><span class=\"source-tag src-tb\">百度</span></td><td><span class=\"stage-badge stage-followup\">需求确认</span></td><td><span class=\"tag tag-warm\">中意向</span></td><td>今天 08:45</td><td><div class=\"action-btns\"><button class=\"icon-btn\" onclick=\"openDetail('李婷婷')\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-phone\" aria-hidden=\"true\"></i></button></div></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-coral\">张</div><div><div style=\"font-weight:500\">张晓明</div><div style=\"font-size:11px;color:var(--color-text-tertiary)\">合同纠纷</div></div></div></td><td><span class=\"source-tag src-ref\">转介绍</span></td><td><span class=\"stage-badge stage-negotiate\">报价阶段</span></td><td><span class=\"tag tag-hot\">高意向</span></td><td>昨天 16:23</td><td><div class=\"action-btns\"><button class=\"icon-btn\" onclick=\"openDetail('张晓明')\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-phone\" aria-hidden=\"true\"></i></button></div></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-teal\">陈</div><div><div style=\"font-weight:500\">陈志强</div><div style=\"font-size:11px;color:var(--color-text-tertiary)\">债务追偿</div></div></div></td><td><span class=\"source-tag src-sem\">抖音</span></td><td><span class=\"stage-badge stage-new\">待联系</span></td><td><span class=\"tag tag-cold\">低意向</span></td><td>昨天 14:10</td><td><div class=\"action-btns\"><button class=\"icon-btn\" onclick=\"openDetail('陈志强')\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-phone\" aria-hidden=\"true\"></i></button></div></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-amber\">刘</div><div><div style=\"font-weight:500\">刘芳</div><div style=\"font-size:11px;color:var(--color-text-tertiary)\">房产纠纷</div></div></div></td><td><span class=\"source-tag src-wx\">微信</span></td><td><span class=\"stage-badge stage-closed\">已成交</span></td><td><span class=\"tag tag-closed\">已签约</span></td><td>昨天 11:30</td><td><div class=\"action-btns\"><button class=\"icon-btn\" onclick=\"openDetail('刘芳')\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-check\" aria-hidden=\"true\"></i></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-blue">王</div><div><div style="font-weight:500">王建国</div><div style="font-size:11px;color:var(--color-text-tertiary)">离婚财产纠纷</div></div></div></td><td><span class="source-tag src-wx">微信</span></td><td><span class="stage-badge stage-contact">首次联系</span></td><td><span class="tag tag-hot">高意向</span></td><td>今天 09:12</td><td><div class="action-btns"><button class="icon-btn" onclick="openDetail('王建国')"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-phone"></span></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-purple">李</div><div><div style="font-weight:500">李婷婷</div><div style="font-size:11px;color:var(--color-text-tertiary)">劳动纠纷</div></div></div></td><td><span class="source-tag src-tb">百度</span></td><td><span class="stage-badge stage-followup">需求确认</span></td><td><span class="tag tag-warm">中意向</span></td><td>今天 08:45</td><td><div class="action-btns"><button class="icon-btn" onclick="openDetail('李婷婷')"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-phone"></span></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-coral">张</div><div><div style="font-weight:500">张晓明</div><div style="font-size:11px;color:var(--color-text-tertiary)">合同纠纷</div></div></div></td><td><span class="source-tag src-ref">转介绍</span></td><td><span class="stage-badge stage-negotiate">报价阶段</span></td><td><span class="tag tag-hot">高意向</span></td><td>昨天 16:23</td><td><div class="action-btns"><button class="icon-btn" onclick="openDetail('张晓明')"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-phone"></span></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-teal">陈</div><div><div style="font-weight:500">陈志强</div><div style="font-size:11px;color:var(--color-text-tertiary)">债务追偿</div></div></div></td><td><span class="source-tag src-sem">抖音</span></td><td><span class="stage-badge stage-new">待联系</span></td><td><span class="tag tag-cold">低意向</span></td><td>昨天 14:10</td><td><div class="action-btns"><button class="icon-btn" onclick="openDetail('陈志强')"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-phone"></span></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-amber">刘</div><div><div style="font-weight:500">刘芳</div><div style="font-size:11px;color:var(--color-text-tertiary)">房产纠纷</div></div></div></td><td><span class="source-tag src-wx">微信</span></td><td><span class="stage-badge stage-closed">已成交</span></td><td><span class="tag tag-closed">已签约</span></td><td>昨天 11:30</td><td><div class="action-btns"><button class="icon-btn" onclick="openDetail('刘芳')"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-check"></span></button></div></td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <div id=\"page-leads\" class=\"main\" style=\"display:none\">
-      <div class=\"topbar\"><div class=\"topbar-title\">线索公海池</div><div class=\"topbar-actions\"><button class=\"btn\"><i class=\"ti ti-filter\" aria-hidden=\"true\"></i>筛选</button><button class=\"btn btn-primary\"><i class=\"ti ti-plus\" aria-hidden=\"true\"></i>导入线索</button></div></div>
-      <div class=\"content\">
-        <div class=\"filter-bar\">
-          <div class=\"filter-chip active\" onclick=\"filterLeads('all')\">全部</div>
-          <div class=\"filter-chip\" onclick=\"filterLeads('hot')\">高意向</div>
-          <div class=\"filter-chip\" onclick=\"filterLeads('warm')\">中意向</div>
-          <div class=\"filter-chip\" onclick=\"filterLeads('cold')\">低意向</div>
-          <div class=\"filter-chip\" onclick=\"filterLeads('unassigned')\">待分配</div>
+    <div id="page-leads" class="main" style="display:none">
+      <div class="topbar"><div class="topbar-title">线索公海池</div><div class="topbar-actions"><button class="btn"><span class="icon icon-filter"></span>筛选</button><button class="btn btn-primary"><span class="icon icon-plus"></span>导入线索</button></div></div>
+      <div class="content">
+        <div class="filter-bar">
+          <div class="filter-chip active" onclick="filterLeads('all')">全部</div>
+          <div class="filter-chip" onclick="filterLeads('hot')">高意向</div>
+          <div class="filter-chip" onclick="filterLeads('warm')">中意向</div>
+          <div class="filter-chip" onclick="filterLeads('cold')">低意向</div>
+          <div class="filter-chip" onclick="filterLeads('unassigned')">待分配</div>
         </div>
-        <div class=\"full-panel\">
-          <table class=\"table\">
-            <thead><tr><th>线索</th><th>业务类型</th><th>来源</th><th>意向度</th><th>创建时间</th><th>分配状态</th><th>操作</th></tr></thead>
+        <div class="full-panel">
+          <table class="table">
+            <thead><tr><th>客户</th><th>案由</th><th>来源</th><th>优先级</th><th>创建时间</th><th>状态</th><th>操作</th></tr></thead>
             <tbody>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-blue\">王</div><span>王建国</span></div></td><td>离婚财产纠纷</td><td><span class=\"source-tag src-wx\">微信</span></td><td><span class=\"priority-dot dot-hot\"></span> 高</td><td>今天 09:12</td><td><span style=\"color:#3B6D11\">已分配</span></td><td><div class=\"action-btns\"><button class=\"icon-btn\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-user-plus\" aria-hidden=\"true\"></i></button></div></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-purple\">李</div><span>李婷婷</span></div></td><td>劳动纠纷</td><td><span class=\"source-tag src-tb\">百度</span></td><td><span class=\"priority-dot dot-warm\"></span> 中</td><td>今天 08:45</td><td><span style=\"color:#BA7517\">待分配</span></td><td><div class=\"action-btns\"><button class=\"icon-btn\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-user-plus\" aria-hidden=\"true\"></i></button></div></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-coral\">张</div><span>张晓明</span></div></td><td>合同纠纷</td><td><span class=\"source-tag src-ref\">转介绍</span></td><td><span class=\"priority-dot dot-hot\"></span> 高</td><td>昨天 16:23</td><td><span style=\"color:#3B6D11\">已分配</span></td><td><div class=\"action-btns\"><button class=\"icon-btn\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-user-plus\" aria-hidden=\"true\"></i></button></div></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-teal\">陈</div><span>陈志强</span></div></td><td>债务追偿</td><td><span class=\"source-tag src-sem\">抖音</span></td><td><span class=\"priority-dot dot-cold\"></span> 低</td><td>昨天 14:10</td><td><span style=\"color:#BA7517\">待分配</span></td><td><div class=\"action-btns\"><button class=\"icon-btn\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-user-plus\" aria-hidden=\"true\"></i></button></div></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-amber\">赵</div><span>赵伟</span></div></td><td>股权纠纷</td><td><span class=\"source-tag src-wx\">微信</span></td><td><span class=\"priority-dot dot-warm\"></span> 中</td><td>昨天 10:20</td><td><span style=\"color:#3B6D11\">已分配</span></td><td><div class=\"action-btns\"><button class=\"icon-btn\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-user-plus\" aria-hidden=\"true\"></i></button></div></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-blue\">孙</div><span>孙丽华</span></div></td><td>知识产权</td><td><span class=\"source-tag src-tb\">百度</span></td><td><span class=\"priority-dot dot-cold\"></span> 低</td><td>前天 15:45</td><td><span style=\"color:#BA7517\">待分配</span></td><td><div class=\"action-btns\"><button class=\"icon-btn\"><i class=\"ti ti-eye\" aria-hidden=\"true\"></i></button><button class=\"icon-btn\"><i class=\"ti ti-user-plus\" aria-hidden=\"true\"></i></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-blue">王</div><span>王建国</span></div></td><td>离婚财产纠纷</td><td><span class="source-tag src-wx">微信</span></td><td><span class="priority-dot dot-hot"></span> 高</td><td>今天 09:12</td><td><span style="color:#3B6D11">已分配</span></td><td><div class="action-btns"><button class="icon-btn"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-user-plus"></span></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-purple">李</div><span>李婷婷</span></div></td><td>劳动纠纷</td><td><span class="source-tag src-tb">百度</span></td><td><span class="priority-dot dot-warm"></span> 中</td><td>今天 08:45</td><td><span style="color:#BA7517">待分配</span></td><td><div class="action-btns"><button class="icon-btn"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-user-plus"></span></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-coral">张</div><span>张晓明</span></div></td><td>合同纠纷</td><td><span class="source-tag src-ref">转介绍</span></td><td><span class="priority-dot dot-hot"></span> 高</td><td>昨天 16:23</td><td><span style="color:#3B6D11">已分配</span></td><td><div class="action-btns"><button class="icon-btn"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-user-plus"></span></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-teal">陈</div><span>陈志强</span></div></td><td>债务追偿</td><td><span class="source-tag src-sem">抖音</span></td><td><span class="priority-dot dot-cold"></span> 低</td><td>昨天 14:10</td><td><span style="color:#BA7517">待分配</span></td><td><div class="action-btns"><button class="icon-btn"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-user-plus"></span></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-amber">赵</div><span>赵伟</span></div></td><td>股权纠纷</td><td><span class="source-tag src-wx">微信</span></td><td><span class="priority-dot dot-warm"></span> 中</td><td>昨天 10:20</td><td><span style="color:#3B6D11">已分配</span></td><td><div class="action-btns"><button class="icon-btn"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-user-plus"></span></button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="lead-avatar la-blue">孙</div><span>孙丽华</span></div></td><td>知识产权</td><td><span class="source-tag src-tb">百度</span></td><td><span class="priority-dot dot-cold"></span> 低</td><td>前天 15:45</td><td><span style="color:#BA7517">待分配</span></td><td><div class="action-btns"><button class="icon-btn"><span class="icon icon-eye"></span></button><button class="icon-btn"><span class="icon icon-user-plus"></span></button></div></td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <div id=\"page-pipeline\" class=\"main\" style=\"display:none\">
-      <div class=\"topbar\"><div class=\"topbar-title\">我的跟进</div><div class=\"topbar-actions\"><button class=\"btn\"><i class=\"ti ti-calendar\" aria-hidden=\"true\"></i>今日待办</button><button class=\"btn btn-primary\"><i class=\"ti ti-message-square\" aria-hidden=\"true\"></i>批量跟进</button></div></div>
-      <div class=\"content\">
-        <div class=\"section-row\">
-          <div class=\"panel\">
-            <div class=\"panel-header\"><div class=\"panel-title\">线索列表</div><div class=\"panel-link\">查看全部</div></div>
-            <div style=\"padding:0 4px\">
-              <div class=\"lead-row\" onclick=\"openDetail('王建国')\"><div class=\"lead-avatar la-blue\">王</div><div class=\"lead-info\"><div class=\"lead-name\">王建国</div><div class=\"lead-meta\">离婚财产纠纷 · 今天 09:12</div></div><span class=\"stage-badge stage-contact\">首次联系</span><span class=\"tag tag-hot\">高意向</span></div>
-              <div class=\"lead-row\" onclick=\"openDetail('张晓明')\"><div class=\"lead-avatar la-coral\">张</div><div class=\"lead-info\"><div class=\"lead-name\">张晓明</div><div class=\"lead-meta\">合同纠纷 · 昨天 16:23</div></div><span class=\"stage-badge stage-negotiate\">报价阶段</span><span class=\"tag tag-hot\">高意向</span></div>
-              <div class=\"lead-row\" onclick=\"openDetail('赵伟')\"><div class=\"lead-avatar la-amber\">赵</div><div class=\"lead-info\"><div class=\"lead-name\">赵伟</div><div class=\"lead-meta\">股权纠纷 · 昨天 10:20</div></div><span class=\"stage-badge stage-followup\">需求确认</span><span class=\"tag tag-warm\">中意向</span></div>
-              <div class=\"lead-row\" onclick=\"openDetail('刘芳')\"><div class=\"lead-avatar la-teal\">刘</div><div class=\"lead-info\"><div class=\"lead-name\">刘芳</div><div class=\"lead-meta\">房产纠纷 · 3天前</div></div><span class=\"stage-badge stage-closed\">已成交</span><span class=\"tag tag-closed\">已签约</span></div>
+    <div id="page-pipeline" class="main" style="display:none">
+      <div class="topbar"><div class="topbar-title">我的跟进</div><div class="topbar-actions"><button class="btn"><span class="icon icon-calendar"></span>今日待办</button><button class="btn btn-primary"><span class="icon icon-message"></span>批量跟进</button></div></div>
+      <div class="content">
+        <div class="section-row">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">线索列表</div><div class="panel-link">查看全部</div></div>
+            <div style="padding:0 4px">
+              <div class="lead-row" onclick="openDetail('王建国')"><div class="lead-avatar la-blue">王</div><div class="lead-info"><div class="lead-name">王建国</div><div class="lead-meta">离婚财产纠纷 · 今天 09:12</div></div><span class="stage-badge stage-contact">首次联系</span><span class="tag tag-hot">高意向</span></div>
+              <div class="lead-row" onclick="openDetail('张晓明')"><div class="lead-avatar la-coral">张</div><div class="lead-info"><div class="lead-name">张晓明</div><div class="lead-meta">合同纠纷 · 昨天 16:23</div></div><span class="stage-badge stage-negotiate">报价阶段</span><span class="tag tag-hot">高意向</span></div>
+              <div class="lead-row" onclick="openDetail('赵伟')"><div class="lead-avatar la-amber">赵</div><div class="lead-info"><div class="lead-name">赵伟</div><div class="lead-meta">股权纠纷 · 昨天 10:20</div></div><span class="stage-badge stage-followup">需求确认</span><span class="tag tag-warm">中意向</span></div>
+              <div class="lead-row" onclick="openDetail('刘芳')"><div class="lead-avatar la-teal">刘</div><div class="lead-info"><div class="lead-name">刘芳</div><div class="lead-meta">房产纠纷 · 3天前</div></div><span class="stage-badge stage-closed">已成交</span><span class="tag tag-closed">已签约</span></div>
             </div>
           </div>
-          <div class=\"panel\">
-            <div class=\"panel-header\"><div class=\"panel-title\">本月指标</div></div>
-            <div style=\"display:grid;grid-template-columns:repeat(2,1fr);gap:10px\">
-              <div style=\"background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px\"><div style=\"font-size:11px;color:var(--color-text-tertiary)\">负责线索</div><div style=\"font-size:18px;font-weight:500;color:var(--color-text-primary)\">33</div></div>
-              <div style=\"background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px\"><div style=\"font-size:11px;color:var(--color-text-tertiary)\">本月成单</div><div style=\"font-size:18px;font-weight:500;color:#3B6D11\">14</div></div>
-              <div style=\"background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px\"><div style=\"font-size:11px;color:var(--color-text-tertiary)\">转化率</div><div style=\"font-size:18px;font-weight:500;color:var(--color-text-primary)\">28%</div></div>
-              <div style=\"background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px\"><div style=\"font-size:11px;color:var(--color-text-tertiary)\">客单价</div><div style=\"font-size:18px;font-weight:500;color:var(--color-text-primary)\">¥15,600</div></div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">本月指标</div></div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+              <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px"><div style="font-size:11px;color:var(--color-text-tertiary)">负责线索</div><div style="font-size:18px;font-weight:500;color:var(--color-text-primary)">33</div></div>
+              <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px"><div style="font-size:11px;color:var(--color-text-tertiary)">本月成单</div><div style="font-size:18px;font-weight:500;color:#3B6D11">14</div></div>
+              <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px"><div style="font-size:11px;color:var(--color-text-tertiary)">转化率</div><div style="font-size:18px;font-weight:500;color:var(--color-text-primary)">28%</div></div>
+              <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px"><div style="font-size:11px;color:var(--color-text-tertiary)">客单价</div><div style="font-size:18px;font-weight:500;color:var(--color-text-primary)">¥15,600</div></div>
             </div>
-            <div style=\"margin-top:12px;padding-top:12px;border-top:0.5px solid var(--color-border-tertiary)\">
-              <div style=\"font-size:11px;color:var(--color-text-tertiary);margin-bottom:8px\">本周待跟进</div>
-              <div style=\"display:flex;align-items:center;gap:8px;padding:6px 8px;background:#EAF3DE;border-radius:6px;font-size:12px\"><i class=\"ti ti-clock\" style=\"font-size:14px;color:#3B6D11\" aria-hidden=\"true\"></i><span style=\"color:var(--color-text-primary)\">王建国 · 发送案件分析资料</span></div>
+            <div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--color-border-tertiary)">
+              <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:8px">本周待跟进</div>
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:#EAF3DE;border-radius:6px;font-size:12px"><span class="icon icon-clock" style="color:#3B6D11"></span><span style="color:var(--color-text-primary)">王建国 · 发送案件分析资料</span></div>
             </div>
           </div>
         </div>
-        <div class=\"full-panel\">
-          <div class=\"panel-header\"><div class=\"panel-title\">跟进记录</div></div>
-          <div class=\"timeline\">
-            <div class=\"tl-item\"><div class=\"tl-dot\"></div><div><div class=\"tl-content\">王建国 — 已发送案件分析资料，客户表示需要时间考虑</div><div class=\"tl-time\">今天 10:30 · 赵磊</div></div></div>
-            <div class=\"tl-item\"><div class=\"tl-dot tl-dot-blue\"></div><div><div class=\"tl-content\">张晓明 — 报价方案已发送，等待客户回复</div><div class=\"tl-time\">昨天 16:45 · 赵磊</div></div></div>
-            <div class=\"tl-item\"><div class=\"tl-dot tl-dot-amber\"></div><div><div class=\"tl-content\">赵伟 — 电话沟通了解股权结构细节</div><div class=\"tl-time\">昨天 11:20 · 赵磊</div></div></div>
-            <div class=\"tl-item\"><div class=\"tl-dot\"></div><div><div class=\"tl-content\">刘芳 — 签约完成，合同已归档</div><div class=\"tl-time\">3天前 · 赵磊</div></div></div>
+        <div class="full-panel">
+          <div class="panel-header"><div class="panel-title">跟进记录</div></div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-content">王建国 — 已发送案件分析资料，客户表示需要时间考虑</div><div class="tl-time">今天 10:30 · 赵磊</div></div></div>
+            <div class="tl-item"><div class="tl-dot tl-dot-blue"></div><div><div class="tl-content">张晓明 — 报价方案已发送，等待客户回复</div><div class="tl-time">昨天 16:45 · 赵磊</div></div></div>
+            <div class="tl-item"><div class="tl-dot tl-dot-amber"></div><div><div class="tl-content">赵伟 — 电话沟通了解股权结构细节</div><div class="tl-time">昨天 11:20 · 赵磊</div></div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-content">刘芳 — 签约完成，合同已归档</div><div class="tl-time">3天前 · 赵磊</div></div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div id=\"page-assign\" class=\"main\" style=\"display:none\">
-      <div class=\"topbar\"><div class=\"topbar-title\">线索分配</div><div class=\"topbar-actions\"><button class=\"btn\"><i class=\"ti ti-filter\" aria-hidden=\"true\"></i>筛选</button><button class=\"btn btn-primary\"><i class=\"ti ti-random\" aria-hidden=\"true\"></i>智能分配</button></div></div>
-      <div class=\"content\">
-        <div class=\"section-row\">
-          <div class=\"panel\">
-            <div class=\"panel-header\"><div class=\"panel-title\">待分配线索</div><div style=\"font-size:12px;color:#D85A30\">12条</div></div>
-            <div style=\"padding:0 4px\">
-              <div class=\"lead-row\"><div class=\"lead-avatar la-purple\">李</div><div class=\"lead-info\"><div class=\"lead-name\">李婷婷</div><div class=\"lead-meta\">劳动纠纷 · 今天 08:45</div></div><span class=\"tag tag-warm\">中意向</span></div>
-              <div class=\"lead-row\"><div class=\"lead-avatar la-teal\">陈</div><div class=\"lead-info\"><div class=\"lead-name\">陈志强</div><div class=\"lead-meta\">债务追偿 · 昨天 14:10</div></div><span class=\"tag tag-cold\">低意向</span></div>
-              <div class=\"lead-row\"><div class=\"lead-avatar la-blue\">孙</div><div class=\"lead-info\"><div class=\"lead-name\">孙丽华</div><div class=\"lead-meta\">知识产权 · 前天 15:45</div></div><span class=\"tag tag-cold\">低意向</span></div>
-              <div class=\"lead-row\"><div class=\"lead-avatar la-amber\">周</div><div class=\"lead-info\"><div class=\"lead-name\">周明</div><div class=\"lead-meta\">婚姻家事 · 前天 09:30</div></div><span class=\"tag tag-warm\">中意向</span></div>
+    <div id="page-assign" class="main" style="display:none">
+      <div class="topbar"><div class="topbar-title">线索分配</div><div class="topbar-actions"><button class="btn"><span class="icon icon-filter"></span>筛选</button><button class="btn btn-primary"><span class="icon icon-shuffle"></span>智能分配</button></div></div>
+      <div class="content">
+        <div class="section-row">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">待分配线索</div><div style="font-size:12px;color:#D85A30">12条</div></div>
+            <div style="padding:0 4px">
+              <div class="lead-row"><div class="lead-avatar la-purple">李</div><div class="lead-info"><div class="lead-name">李婷婷</div><div class="lead-meta">劳动纠纷 · 百度 · 今天 08:45</div></div><span class="tag tag-warm">中意向</span></div>
+              <div class="lead-row"><div class="lead-avatar la-teal">陈</div><div class="lead-info"><div class="lead-name">陈志强</div><div class="lead-meta">债务追偿 · 抖音 · 昨天 14:10</div></div><span class="tag tag-cold">低意向</span></div>
+              <div class="lead-row"><div class="lead-avatar la-blue">孙</div><div class="lead-info"><div class="lead-name">孙丽华</div><div class="lead-meta">知识产权 · 百度 · 前天 15:45</div></div><span class="tag tag-cold">低意向</span></div>
             </div>
           </div>
-          <div class=\"panel\">
-            <div class=\"panel-header\"><div class=\"panel-title\">团队负载</div></div>
-            <div style=\"display:flex;flex-direction:column;gap:8px\">
-              <div><div style=\"display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px\"><span>赵磊</span><span>33条</span></div><div style=\"height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden\"><div style=\"width:75%;height:100%;background:#97C459;border-radius:4px\"></div></div></div>
-              <div><div style=\"display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px\"><span>孙丽华</span><span>25条</span></div><div style=\"height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden\"><div style=\"width:58%;height:100%;background:#85B7EB;border-radius:4px\"></div></div></div>
-              <div><div style=\"display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px\"><span>周明达</span><span>40条</span></div><div style=\"height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden\"><div style=\"width:92%;height:100%;background:#FAC775;border-radius:4px\"></div></div></div>
-              <div><div style=\"display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px\"><span>吴晓峰</span><span>47条</span></div><div style=\"height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden\"><div style=\"width:100%;height:100%;background:#F0997B;border-radius:4px\"></div></div></div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">团队成员</div></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;background:var(--color-background-secondary)">
+                <div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="background:#9FE1CB;color:#085041">赵</div><div><div style="font-size:13px;font-weight:500">赵磊</div><div style="font-size:11px;color:var(--color-text-tertiary)">高级律师</div></div></div>
+                <div style="text-align:right"><div style="font-size:14px;font-weight:500;color:#3B6D11">14</div><div style="font-size:11px;color:var(--color-text-tertiary)">本月成单</div></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;background:var(--color-background-secondary)">
+                <div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="background:#CECBF6;color:#3C3489">钱</div><div><div style="font-size:13px;font-weight:500">钱芳</div><div style="font-size:11px;color:var(--color-text-tertiary)">资深律师</div></div></div>
+                <div style="text-align:right"><div style="font-size:14px;font-weight:500;color:#3B6D11">11</div><div style="font-size:11px;color:var(--color-text-tertiary)">本月成单</div></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;background:var(--color-background-secondary)">
+                <div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="background:#F5C4B3;color:#712B13">孙</div><div><div style="font-size:13px;font-weight:500">孙伟</div><div style="font-size:11px;color:var(--color-text-tertiary)">律师</div></div></div>
+                <div style="text-align:right"><div style="font-size:14px;font-weight:500;color:#3B6D11">8</div><div style="font-size:11px;color:var(--color-text-tertiary)">本月成单</div></div>
+              </div>
             </div>
           </div>
         </div>
-        <div class=\"full-panel\">
-          <div class=\"panel-header\"><div class=\"panel-title\">分配记录</div><div class=\"panel-link\">查看历史</div></div>
-          <table class=\"table\">
-            <thead><tr><th>线索</th><th>业务类型</th><th>分配时间</th><th>分配人</th><th>接收人</th></tr></thead>
+      </div>
+    </div>
+
+    <div id="page-report" class="main" style="display:none">
+      <div class="topbar"><div class="topbar-title">成单归因</div><div class="topbar-actions"><span style="font-size:12px;color:var(--color-text-tertiary)">本月 · 2025年5月</span><button class="btn"><span class="icon icon-download"></span>导出报表</button></div></div>
+      <div class="content">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">总成交</div><div class="metric-value">46</div><div class="metric-sub metric-up">↑ 8 较上月</div></div>
+          <div class="metric"><div class="metric-label">总营收</div><div class="metric-value">¥620K</div><div class="metric-sub metric-up">↑ 18% 较上月</div></div>
+          <div class="metric"><div class="metric-label">客单价</div><div class="metric-value">¥13,478</div><div class="metric-sub metric-up">↑ 5.2%</div></div>
+          <div class="metric"><div class="metric-label">转化周期</div><div class="metric-value">18天</div><div class="metric-sub metric-down">↓ 3天 较上月</div></div>
+        </div>
+        <div class="section-row">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">成单来源分布</div></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>微信引流</span><span style="font-weight:500">38%</span></div><div style="height:16px;background:var(--color-background-secondary);border-radius:8px"><div style="width:38%;height:100%;background:#97C459;border-radius:8px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>百度搜索</span><span style="font-weight:500">28%</span></div><div style="height:16px;background:var(--color-background-secondary);border-radius:8px"><div style="width:28%;height:100%;background:#85B7EB;border-radius:8px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>客户推荐</span><span style="font-weight:500">22%</span></div><div style="height:16px;background:var(--color-background-secondary);border-radius:8px"><div style="width:22%;height:100%;background:#AFA9EC;border-radius:8px"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>抖音信息流</span><span style="font-weight:500">12%</span></div><div style="height:16px;background:var(--color-background-secondary);border-radius:8px"><div style="width:12%;height:100%;background:#F0997B;border-radius:8px"></div></div></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Top 成单律师</div></div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;padding:8px;background:#EAF3DE;border-radius:8px"><div style="width:24px;height:24px;border-radius:50%;background:#97C459;color:#173404;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500">1</div><div style="flex:1"><div style="font-size:13px;font-weight:500">赵磊</div><div style="font-size:11px;color:var(--color-text-tertiary)">高级律师</div></div><div style="font-size:16px;font-weight:500;color:#3B6D11">14</div></div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px"><div style="width:24px;height:24px;border-radius:50%;background:#85B7EB;color:#042C53;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500">2</div><div style="flex:1"><div style="font-size:13px;font-weight:500">钱芳</div><div style="font-size:11px;color:var(--color-text-tertiary)">资深律师</div></div><div style="font-size:16px;font-weight:500">11</div></div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px"><div style="width:24px;height:24px;border-radius:50%;background:#FAC775;color:#412402;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500">3</div><div style="flex:1"><div style="font-size:13px;font-weight:500">孙伟</div><div style="font-size:11px;color:var(--color-text-tertiary)">律师</div></div><div style="font-size:16px;font-weight:500">8</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-team" class="main" style="display:none">
+      <div class="topbar"><div class="topbar-title">团队管理</div><div class="topbar-actions"><button class="btn"><span class="icon icon-filter"></span>筛选</button><button class="btn btn-primary"><span class="icon icon-plus"></span>邀请成员</button></div></div>
+      <div class="content">
+        <div class="full-panel">
+          <table class="table">
+            <thead><tr><th>成员</th><th>角色</th><th>负责线索</th><th>本月成单</th><th>转化率</th><th>入职时间</th></tr></thead>
             <tbody>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-blue\">王</div><span>王建国</span></div></td><td>离婚财产纠纷</td><td>今天 09:15</td><td>张明</td><td>赵磊</td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-coral\">张</div><span>张晓明</span></div></td><td>合同纠纷</td><td>昨天 16:30</td><td>张明</td><td>赵磊</td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-amber\">赵</div><span>赵伟</span></div></td><td>股权纠纷</td><td>昨天 10:25</td><td>李总监</td><td>周明达</td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"lead-avatar la-teal\">刘</div><span>刘芳</span></div></td><td>房产纠纷</td><td>3天前</td><td>张明</td><td>孙丽华</td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">张</div><div><div style="font-weight:500">张明</div><div style="font-size:11px;color:var(--color-text-tertiary)">zhangming@lawfirm.com</div></div></div></td><td><span class="role-badge">管理员</span></td><td>45</td><td><span style="color:#3B6D11">18</span></td><td>28%</td><td>2023-03-15</td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="background:#9FE1CB;color:#085041">赵</div><div><div style="font-weight:500">赵磊</div><div style="font-size:11px;color:var(--color-text-tertiary)">zhaolei@lawfirm.com</div></div></div></td><td><span class="role-badge">高级律师</span></td><td>33</td><td><span style="color:#3B6D11">14</span></td><td>28%</td><td>2023-06-20</td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="background:#CECBF6;color:#3C3489">钱</div><div><div style="font-weight:500">钱芳</div><div style="font-size:11px;color:var(--color-text-tertiary)">qianfang@lawfirm.com</div></div></div></td><td><span class="role-badge">资深律师</span></td><td>28</td><td><span style="color:#3B6D11">11</span></td><td>25%</td><td>2023-09-10</td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="background:#F5C4B3;color:#712B13">孙</div><div><div style="font-weight:500">孙伟</div><div style="font-size:11px;color:var(--color-text-tertiary)">sunwei@lawfirm.com</div></div></div></td><td><span class="role-badge">律师</span></td><td>22</td><td><span style="color:#3B6D11">8</span></td><td>22%</td><td>2024-01-15</td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="background:#FAC775;color:#633806">李</div><div><div style="font-weight:500">李娜</div><div style="font-size:11px;color:var(--color-text-tertiary)">lina@lawfirm.com</div></div></div></td><td><span class="role-badge">律师</span></td><td>18</td><td><span style="color:#3B6D11">5</span></td><td>18%</td><td>2024-05-20</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <div id=\"page-report\" class=\"main\" style=\"display:none\">
-      <div class=\"topbar\"><div class=\"topbar-title\">成单归因</div><div class=\"topbar-actions\"><span style=\"font-size:12px;color:var(--color-text-tertiary)\">本月 · 2025年5月</span><button class=\"btn\"><i class=\"ti ti-download\" aria-hidden=\"true\"></i>导出分析报告</button></div></div>
-      <div class=\"content\">
-        <div class=\"metrics\" style=\"grid-template-columns:repeat(3,1fr)\">
-          <div class=\"metric\"><div class=\"metric-label\"><i class=\"ti ti-check-circle\" style=\"font-size:14px\" aria-hidden=\"true\"></i>本月成单</div><div class=\"metric-value\">46</div><div class=\"metric-sub metric-up\">↑ 8 较上月</div></div>
-          <div class=\"metric\"><div class=\"metric-label\"><i class=\"ti ti-wallet\" style=\"font-size:14px\" aria-hidden=\"true\"></i>平均合同额</div><div class=\"metric-value\">¥13,478</div><div class=\"metric-sub metric-up\">↑ 5.2%</div></div>
-          <div class=\"metric\"><div class=\"metric-label\"><i class=\"ti ti-x-circle\" style=\"font-size:14px\" aria-hidden=\"true\"></i>丢单数</div><div class=\"metric-value\">31</div><div class=\"metric-sub metric-down\">价格因素 58%</div></div>
-        </div>
-        <div class=\"full-panel\">
-          <div class=\"panel-title\" style=\"margin-bottom:14px\">丢单原因分析</div>
-          <div style=\"display:flex;flex-direction:column;gap:8px\">
-            <div style=\"display:flex;align-items:center;gap:10px;font-size:13px\"><span style=\"width:80px;color:var(--color-text-secondary)\">价格过高</span><div style=\"flex:1;height:14px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden\"><div style=\"width:58%;height:100%;background:#F0997B;border-radius:4px\"></div></div><span style=\"color:var(--color-text-secondary)\">58%</span></div>
-            <div style=\"display:flex;align-items:center;gap:10px;font-size:13px\"><span style=\"width:80px;color:var(--color-text-secondary)\">跟进不及时</span><div style=\"flex:1;height:14px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden\"><div style=\"width:22%;height:100%;background:#85B7EB;border-radius:4px\"></div></div><span style=\"color:var(--color-text-secondary)\">22%</span></div>
-            <div style=\"display:flex;align-items:center;gap:10px;font-size:13px\"><span style=\"width:80px;color:var(--color-text-secondary)\">需求不匹配</span><div style=\"flex:1;height:14px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden\"><div style=\"width:12%;height:100%;background:#AFA9EC;border-radius:4px\"></div></div><span style=\"color:var(--color-text-secondary)\">12%</span></div>
-            <div style=\"display:flex;align-items:center;gap:10px;font-size:13px\"><span style=\"width:80px;color:var(--color-text-secondary)\">竞对截胡</span><div style=\"flex:1;height:14px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden\"><div style=\"width:8%;height:100%;background:#FAC775;border-radius:4px\"></div></div><span style=\"color:var(--color-text-secondary)\">8%</span></div>
+    <div id="detail-panel" class="detail-overlay">
+      <div class="detail-header"><div><div id="detail-name" style="font-size:15px;font-weight:500;color:var(--color-text-primary)">王建国</div><div style="font-size:11px;color:var(--color-text-tertiary)">离婚财产纠纷 · 高意向</div></div><button class="close-btn" onclick="closeDetail()">×</button></div>
+      <div class="detail-body">
+        <div class="detail-section">
+          <div class="detail-section-title">基本信息</div>
+          <div class="info-grid">
+            <div class="info-item"><label>客户姓名</label><span>王建国</span></div>
+            <div class="info-item"><label>联系电话</label><span>138****5678</span></div>
+            <div class="info-item"><label>来源渠道</label><span>微信引流</span></div>
+            <div class="info-item"><label>创建时间</label><span>2025-05-11 09:12</span></div>
+            <div class="info-item"><label>当前阶段</label><span>首次联系</span></div>
+            <div class="info-item"><label>负责律师</label><span>赵磊</span></div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div id=\"page-team\" class=\"main\" style=\"display:none\">
-      <div class=\"topbar\"><div class=\"topbar-title\">团队管理</div><button class=\"btn btn-primary\"><i class=\"ti ti-plus\" aria-hidden=\"true\"></i>添加成员</button></div>
-      <div class=\"content\">
-        <div class=\"full-panel\">
-          <table class=\"table\">
-            <thead><tr><th>成员</th><th>角色</th><th>负责区域</th><th>当前线索</th><th>本月成单</th><th>状态</th></tr></thead>
-            <tbody>
-              <tr><td><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"lead-avatar la-teal\" style=\"width:28px;height:28px;font-size:12px\">张</div>张明</div></td><td><span style=\"background:#EEEDFE;color:#3C3489;padding:2px 8px;border-radius:10px;font-size:11px\">管理员</span></td><td>全团队</td><td>—</td><td>—</td><td><span style=\"color:#3B6D11\">● 在线</span></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"lead-avatar la-blue\" style=\"width:28px;height:28px;font-size:12px\">李</div>李总监</div></td><td><span style=\"background:#E6F1FB;color:#0C447C;padding:2px 8px;border-radius:10px;font-size:11px\">主管</span></td><td>A组</td><td>—</td><td>25单</td><td><span style=\"color:#3B6D11\">● 在线</span></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"lead-avatar la-teal\" style=\"width:28px;height:28px;font-size:12px\">赵</div>赵磊</div></td><td><span style=\"background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:10px;font-size:11px\">销售</span></td><td>A组</td><td>33</td><td>14单</td><td><span style=\"color:#3B6D11\">● 在线</span></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"lead-avatar la-blue\" style=\"width:28px;height:28px;font-size:12px\">孙</div>孙丽华</div></td><td><span style=\"background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:10px;font-size:11px\">销售</span></td><td>A组</td><td>25</td><td>11单</td><td><span style=\"color:#3B6D11\">● 在线</span></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"lead-avatar la-amber\" style=\"width:28px;height:28px;font-size:12px\">周</div>周明达</div></td><td><span style=\"background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:10px;font-size:11px\">销售</span></td><td>B组</td><td>40</td><td>7单</td><td><span style=\"color:#BA7517\">● 忙碌</span></td></tr>
-              <tr><td><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"lead-avatar la-purple\" style=\"width:28px;height:28px;font-size:12px\">吴</div>吴晓峰</div></td><td><span style=\"background:#EAF3DE;color:#3B6D11;padding:2px 8px;border-radius:10px;font-size:11px\">销售</span></td><td>B组</td><td>47</td><td>5单</td><td><span style=\"color:#A32D2D\">● 超载</span></td></tr>
-            </tbody>
-          </table>
+        <div class="detail-section">
+          <div class="detail-section-title">案件详情</div>
+          <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.6">客户因夫妻感情破裂，涉及离婚财产分割。配偶名下有房产2套，存款若干，双方育有一子。客户希望争取孩子抚养权及合理的财产分割。</div>
         </div>
-      </div>
-    </div>
-
-    <div id=\"detail-panel\" class=\"detail-overlay\">
-      <div class=\"detail-header\">
-        <div><div style=\"font-size:15px;font-weight:500;color:var(--color-text-primary)\" id=\"detail-name\">王建国</div><div style=\"font-size:12px;color:var(--color-text-tertiary);margin-top:2px\">离婚财产纠纷 · <span class=\"tag tag-hot\" style=\"font-size:10px\">🔥 高意向</span></div></div>
-        <div class=\"icon-btn\" onclick=\"closeDetail()\"><i class=\"ti ti-x\" aria-hidden=\"true\"></i></div>
-      </div>
-      <div class=\"detail-body\">
-        <div class=\"detail-section\">
-          <div class=\"detail-section-title\">基本信息</div>
-          <div class=\"info-grid\">
-            <div class=\"info-item\"><label>手机</label><span>138****5672</span></div>
-            <div class=\"info-item\"><label>来源</label><span>微信引流</span></div>
-            <div class=\"info-item\"><label>分配给</label><span>赵磊</span></div>
-            <div class=\"info-item\"><label>创建时间</label><span>今天 09:12</span></div>
+        <div class="detail-section">
+          <div class="detail-section-title">SOP进度</div>
+          <div class="sop-steps">
+            <div class="sop-step done"><span class="sop-icon icon-check"></span><span>线索录入</span></div>
+            <div class="sop-step done"><span class="sop-icon icon-phone"></span><span>首次电话沟通</span></div>
+            <div class="sop-step active"><span class="sop-icon icon-file"></span><span>案件分析评估</span></div>
+            <div class="sop-step pending"><span class="sop-icon icon-file"></span><span>出具服务方案报价</span></div>
+            <div class="sop-step pending"><span class="sop-icon icon-writing"></span><span>签约成单</span></div>
           </div>
         </div>
-        <div class=\"detail-section\">
-          <div class=\"detail-section-title\">SOP 跟进步骤</div>
-          <div class=\"sop-steps\">
-            <div class=\"sop-step done\"><i class=\"ti ti-circle-check sop-icon\" aria-hidden=\"true\"></i><span>初次电话联系</span><span style=\"margin-left:auto;font-size:11px;color:var(--color-text-tertiary)\">✓ 09:15</span></div>
-            <div class=\"sop-step active\"><i class=\"ti ti-message-circle sop-icon\" aria-hidden=\"true\"></i><span>发送案件分析资料</span><span style=\"margin-left:auto;font-size:11px;color:#3B6D11\">进行中</span></div>
-            <div class=\"sop-step pending\"><i class=\"ti ti-calendar sop-icon\" aria-hidden=\"true\"></i><span>预约线下面谈</span></div>
-            <div class=\"sop-step pending\"><i class=\"ti ti-file-description sop-icon\" aria-hidden=\"true\"></i><span>出具服务方案报价</span></div>
-            <div class=\"sop-step pending\"><i class=\"ti ti-writing sop-icon\" aria-hidden=\"true\"></i><span>签约成单</span></div>
+        <div class="detail-section">
+          <div class="detail-section-title">跟进记录</div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-dot"></div><div><div class="tl-content">首次通话 — 客户表示急于处理离婚财产，配偶名下有房产2套，意向强烈</div><div class="tl-time">今天 09:15 · 赵磊</div></div></div>
+            <div class="tl-item"><div class="tl-dot tl-dot-blue"></div><div><div class="tl-content">已加微信，发送了事务所介绍和成功案例</div><div class="tl-time">今天 09:28 · 赵磊</div></div></div>
+            <div class="tl-item"><div class="tl-dot tl-dot-amber"></div><div><div class="tl-content">客户询问代理费用区间，回复¥28000-45000，待进一步了解案情</div><div class="tl-time">今天 10:05 · 赵磊</div></div></div>
           </div>
         </div>
-        <div class=\"detail-section\">
-          <div class=\"detail-section-title\">跟进记录</div>
-          <div class=\"timeline\">
-            <div class=\"tl-item\"><div class=\"tl-dot\"></div><div><div class=\"tl-content\">首次通话 — 客户表示急于处理离婚财产，配偶名下有房产2套，意向强烈</div><div class=\"tl-time\">今天 09:15 · 赵磊</div></div></div>
-            <div class=\"tl-item\"><div class=\"tl-dot tl-dot-blue\"></div><div><div class=\"tl-content\">已加微信，发送了事务所介绍和成功案例</div><div class=\"tl-time\">今天 09:28 · 赵磊</div></div></div>
-            <div class=\"tl-item\"><div class=\"tl-dot tl-dot-amber\"></div><div><div class=\"tl-content\">客户询问代理费用区间，回复¥28000-45000，待进一步了解案情</div><div class=\"tl-time\">今天 10:05 · 赵磊</div></div></div>
-          </div>
-        </div>
-        <div class=\"detail-section\">
-          <div class=\"detail-section-title\">添加跟进记录</div>
-          <textarea class=\"add-note\" placeholder=\"记录本次跟进内容...\"></textarea>
-          <div style=\"display:flex;gap:6px;margin-top:8px\">
-            <button class=\"btn btn-primary\" style=\"font-size:12px;flex:1\">保存记录</button>
-            <button class=\"btn\" style=\"font-size:12px\">下次跟进提醒</button>
+        <div class="detail-section">
+          <div class="detail-section-title">添加跟进记录</div>
+          <textarea class="add-note" placeholder="记录本次跟进内容..."></textarea>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button class="btn btn-primary" style="font-size:12px;flex:1">保存记录</button>
+            <button class="btn" style="font-size:12px">下次跟进提醒</button>
           </div>
         </div>
       </div>
